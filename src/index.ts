@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express';
 import dotenv from 'dotenv';
-import knex from './databaseConnection/knexfile'
+import db from './databaseConnection/db'
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ interface userType {
 
 app.get('/', async(req: Request, res: Response) =>{
     try{
-        const users: userType[] = await knex('Users').select('*');
+        const users: userType[] = await db('Users').select('*');
         res.json(users);
     } catch (err){
         res.status(500).json({error: err})

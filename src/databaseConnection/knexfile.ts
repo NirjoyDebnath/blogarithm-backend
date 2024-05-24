@@ -1,8 +1,12 @@
 import {config} from 'dotenv';
+import dotenv from 'dotenv';
 import {Knex} from 'knex';
-import knex_g from 'knex';
+import knex from 'knex';
+import path from 'path';
+const envPath = path.join(__dirname + '/../../.env');
+dotenv.config({ path: envPath });
 
-config();
+// dotenv.config();
 
 // type keyTypes = 'development'|'production'|'staging'|'test'
 
@@ -26,10 +30,4 @@ const connectToDatabase: knexDatabaseConnectionObjectType = {
     },
 };
 
-const environment: string = process.env.environment||'development';
-
-const knex = knex_g(connectToDatabase[environment]);
-
-// console.log(knex);
-
-export default knex;
+export default connectToDatabase;
