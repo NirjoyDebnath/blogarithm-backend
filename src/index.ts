@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import db from './databaseConnection/db'
 import userRouter from './routes/userRoute'
 import {userType} from './interfaces/user'
-import { Next } from 'mysql2/typings/mysql/lib/parsers/typeCast';
 
 dotenv.config();
 
@@ -25,7 +24,7 @@ app.get('/', async(req: Request, res: Response) =>{
 })
 
 app.use((err:Error, req:Request, res: Response, next: NextFunction) =>{
-    res.status(500).send(err.message)
+    res.status(500).json({error: err.message})
 })
 
 app.listen(port, () =>{
