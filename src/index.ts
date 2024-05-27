@@ -1,12 +1,16 @@
 import express, {Request, Response} from 'express';
 import dotenv from 'dotenv';
 import db from './databaseConnection/db'
+import userRouter from './routes/userRoute'
 
 dotenv.config();
 
 const app = express();
 const port = process.env.port || 3000;
+
+
 app.use(express.json());
+app.use('/api/users', userRouter.router)
 
 interface userType {
     Id:number,
