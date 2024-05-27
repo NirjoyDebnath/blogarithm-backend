@@ -8,4 +8,5 @@ export interface userType {
 }
 
 export interface userInputType extends Omit<userType,'Id'>{}
+// export interface userOutputType extends Omit<userType,'Id'>{}
 
