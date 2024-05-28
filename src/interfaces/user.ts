@@ -1,12 +1,16 @@
-
-
-export interface userType {
-    Id: number,
+export interface signUpUserInfoType{
     UserName: string,
     Email: string,
-    Password: string,
+    Name: string,
+    JoinDate: Date,
+    Role: number,
 }
 
-export interface userInputType extends Omit<userType,'Id'>{}
-// export interface userOutputType extends Omit<userType,'Id'>{}
+export interface userType extends signUpUserInfoType {
+    Id: number,
+}
+
+export interface signUpUserInputType extends Omit<userType, 'Id' | 'JoinDate' | 'Role'>{
+    Password: string,
+}
 
