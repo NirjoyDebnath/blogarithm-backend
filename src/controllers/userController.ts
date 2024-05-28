@@ -22,3 +22,13 @@ export const deleteUser = async(req: Request, res: Response, next: NextFunction)
     }
 }
 
+export const updateNameById = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+    try{
+        await userService.updateNameById(Number(req.params.id), req.body.UserName);
+        res.json({status: 'Updated'});
+    } catch(err){
+        console.log('User update hoy nai');
+        next(err);
+    }
+}
+

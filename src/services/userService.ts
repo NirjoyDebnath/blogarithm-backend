@@ -6,8 +6,16 @@ export const getAllUsers = async():Promise<userType[]> =>{
 }
 
 export const deleteUser = async(id:number):Promise<void> =>{
-    const deleteId = await userRepository.deleteUser(id);
+    const deleteId: number = await userRepository.deleteUser(id);
     if(!deleteId){
         throw new Error('Delete unsuccessful');
     }
+}
+
+export const updateNameById = async (id: number, newUserName: string):Promise<boolean> =>{
+    const isUpdated:boolean = await userRepository.updateNameById(id, newUserName);
+    if(!isUpdated){
+        throw new Error('Not Updated')
+    }
+    return isUpdated;
 }
