@@ -24,3 +24,8 @@ export const deleteUser = async(id:number):Promise<number> =>{
         throw err;
     }
 }
+
+export const updateNameById = async(id:number, newUserName: string):Promise<boolean> =>{
+    const isUpdated:boolean = await db('users').where('Id', id).update({Name: newUserName});
+    return isUpdated;
+}

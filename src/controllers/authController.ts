@@ -28,6 +28,6 @@ export const logIn = async(req: Request, res:Response, next: NextFunction): Prom
         const logInStatus: string = await authService.logIn(logInUserInput);
         res.json({message: logInStatus})
     } catch(err){
-        next(err);
+        next(new Error('Not logged in'));
     }
 }
