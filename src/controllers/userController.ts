@@ -12,21 +12,21 @@ export const getAllUsers = async(req: Request, res: Response, next: NextFunction
     }
 }
 
-export const insertUser = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
-    try{
-        const userInfo = req.body
-        const user = await userService.insertUser(userInfo)
-        res.json(userInfo)
-    } catch (err){
-        console.log('Insert hoy nai')
-        next(err)
-    }
-    console.log('Hit on the insert user')
-}
+// export const insertUser = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
+//     try{
+//         const userInfo = req.body
+//         const user = await userService.insertUser(userInfo)
+//         res.json(userInfo)
+//     } catch (err){
+//         console.log('Insert hoy nai')
+//         next(err)
+//     }
+//     console.log('Hit on the insert user')
+// }
 
 export const deleteUser = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
     try{
-        await userService.deleteUser(req.body.UserName)
+        await userService.deleteUser(Number(req.params.id))
         res.json({status: 'Deleted'})
     } catch(err){
         console.log('User delete hoy nai')

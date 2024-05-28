@@ -6,9 +6,10 @@ const router:Router = Router();
 
 router.route('/')
     .get(userController.getAllUsers)
-    .post(userController.insertUser)
-    .delete(userController.deleteUser)
+    //.post(userController.insertUser)
 
+router.route('/:id')
+    .delete(userController.deleteUser)
 
 
 export default {router}
