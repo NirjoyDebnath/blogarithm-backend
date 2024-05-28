@@ -6,3 +6,5 @@ export interface signUpAuthInfoType{
 export interface authType extends signUpAuthInfoType{
     Id: number,
 }
+
+export interface logInAuthInfoType extends signUpAuthInfoType{}
