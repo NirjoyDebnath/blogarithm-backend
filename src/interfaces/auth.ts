@@ -1,10 +1,10 @@
-export interface signUpAuthInfoType{
+export interface ISignUpAuthInfoType{
     UserName: string,
     Password: string,
 }
 
-export interface authType extends signUpAuthInfoType{
+export interface IAuthType extends ISignUpAuthInfoType{
     Id: number,
 }
 
-export interface logInAuthInfoType extends signUpAuthInfoType{}
+export interface ILogInAuthInfoType extends ISignUpAuthInfoType{}

@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
 import * as userService from '../services/userService';
-import { userType } from '../interfaces/user';
+import { IUserType } from '../interfaces/user';
 
 export const getAllUsers = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
     try{
-        const users: userType[] = await userService.getAllUsers();
-        res.json(users);
+        const users: IUserType[] = await userService.getAllUsers();
+        ///user na thakle eta ekta alada response deya lagte pare
+        res.status(200).json(users);
     } catch(err){
-        console.log('User der pai nai');
         next(err);
     }
 }

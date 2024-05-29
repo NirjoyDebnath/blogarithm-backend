@@ -1,12 +1,12 @@
-import { userType } from '../interfaces/user';
+import { IUserType } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 
-export const getAllUsers = async():Promise<userType[]> =>{
+export const getAllUsers = async():Promise<IUserType[]> =>{
     return userRepository.getAllUsers();
 }
 
 export const deleteUser = async(id:number):Promise<void> =>{
-    const deleteId: number = await userRepository.deleteUser(id);
+    const deleteId: boolean = await userRepository.deleteUser(id);
     if(!deleteId){
         throw new Error('Delete unsuccessful');
     }

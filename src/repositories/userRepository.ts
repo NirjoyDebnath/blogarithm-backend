@@ -1,23 +1,24 @@
-import { userType } from '../interfaces/user';
-import db from './../databaseConnection/db';
+import { IUserType } from '../interfaces/user';
+import db from '../database/db';
 
-export const getAllUsers = async():Promise<userType[]> => {
-    const users:userType[] = await db<userType>('Users').select('*');
+export const getAllUsers = async():Promise<IUserType[]> => {
+    const users:IUserType[] = await db<IUserType>('Users').select('*');
     return users;
 }
 
-export const deleteUser = async(id:number):Promise<number> =>{
+export const deleteUser = async(id:number):Promise<boolean> =>{
     const trx = await db.transaction();
 
     try{
-        const user = await trx<userType>('Users').select('*').where('Id', id).first();
+        const user:IUserType | undefined = await trx<IUserType>('Users').select('*').where('Id', id).first();
         if(!user){
             throw new Error('No such user');
         }
-        await trx('Users').where('UserName', user.UserName).del();
-        await trx('auth').where('UserName', user.UserName).del();
+        const {UserName} = user;
+        await trx('Users').where('UserName', UserName).del();
+        await trx('auth').where('UserName', UserName).del();
         await trx.commit();
-        return 1;
+        return true;
 
     } catch(err){
         await trx.rollback();
