@@ -1,4 +1,4 @@
-export interface signUpUserInfoType{
+export interface ISignUpUserInfoType{
     UserName: string,
     Email: string,
     Name: string,
@@ -6,11 +6,13 @@ export interface signUpUserInfoType{
     Role: number,
 }
 
-export interface userType extends signUpUserInfoType {
+export interface IUserType extends ISignUpUserInfoType{
     Id: number,
 }
 
-export interface signUpUserInputType extends Omit<userType, 'Id' | 'JoinDate' | 'Role'>{
+export interface IUserTypeResponse extends ISignUpUserInfoType{}
+
+export interface ISignUpUserInputType extends Omit<IUserType, 'Id' | 'JoinDate' | 'Role'>{
     Password: string,
 }
 

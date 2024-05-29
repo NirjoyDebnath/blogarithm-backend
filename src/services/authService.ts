@@ -1,28 +1,28 @@
-import { signUpUserInputType } from "../interfaces/user";
-import { signUpUserInfoType } from "../interfaces/user";
-import { logInAuthInfoType, signUpAuthInfoType } from "../interfaces/auth";
+import { ISignUpUserInputType } from "../interfaces/user";
+import { ISignUpUserInfoType } from "../interfaces/user";
+import { ILogInAuthInfoType, ISignUpAuthInfoType } from "../interfaces/auth";
 import * as authRepository from "../repositories/authRepository";
-import { userType } from "../interfaces/user";
+import { IUserType } from "../interfaces/user";
 
-export const signUp = async(signUpUserInput: signUpUserInputType) =>{
-    const userInfo: signUpUserInfoType = {
+export const signUp = async(signUpUserInput: ISignUpUserInputType) =>{
+    const userInfo: ISignUpUserInfoType = {
         UserName: signUpUserInput.UserName,
         Email: signUpUserInput.Email,
         Name: signUpUserInput.Name,
         Role: 0,
         JoinDate: new Date()};
-    const signUpAuthInfo: signUpAuthInfoType = {UserName: signUpUserInput.UserName, Password: signUpUserInput.Password};
-    const user: userType = await authRepository.signUp(userInfo, signUpAuthInfo);
+    const signUpAuthInfo: ISignUpAuthInfoType = {UserName: signUpUserInput.UserName, Password: signUpUserInput.Password};
+    const user: IUserType = await authRepository.signUp(userInfo, signUpAuthInfo);
     return user;
 }
 
-export const logIn = async(logInUserInput: logInAuthInfoType):Promise<string> =>{
-    const passwordFromDB:string = await authRepository.logIn(logInUserInput);
+export const logIn = async(logInUserInput: ILogInAuthInfoType):Promise<string> =>{
+    const passwordFromDB: string | undefined = await authRepository.logIn(logInUserInput);
 
     if(logInUserInput.Password === passwordFromDB){
         return 'Logged in';
     }
     else {
-        return 'Not loged in';
+        return 'Not logged in';
     }
 }

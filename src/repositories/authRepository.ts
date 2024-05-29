@@ -1,17 +1,18 @@
-import { signUpUserInfoType } from '../interfaces/user';
-import { logInAuthInfoType, signUpAuthInfoType } from '../interfaces/auth';
-import { userType } from '../interfaces/user';
-import db from '../databaseConnection/db';
+import { ISignUpUserInfoType } from '../interfaces/user';
+import { IAuthType, ILogInAuthInfoType, ISignUpAuthInfoType } from '../interfaces/auth';
+import { IUserType } from '../interfaces/user';
+import db from '../database/db';
+import { Knex } from 'knex'
 
-export const signUp = async(userInfo: signUpUserInfoType, signUpAuthInfo: signUpAuthInfoType):Promise<userType> =>{
-    const trx = await db.transaction();
+export const signUp = async(userInfo: ISignUpUserInfoType, signUpAuthInfo: ISignUpAuthInfoType):Promise<IUserType> =>{
+    const trx:Knex.Transaction = await db.transaction();
     try{
         await trx('Auth').insert(signUpAuthInfo);
-        const [Id] = await trx('Users').insert(userInfo);
+        const [Id]: number[] = await trx('Users').insert(userInfo);
             
         await trx.commit();
 
-        const user: userType = {Id, ...userInfo};
+        const user: IUserType = {Id, ...userInfo};
         return user;
     } catch(err){
         await trx.rollback();
@@ -19,7 +20,13 @@ export const signUp = async(userInfo: signUpUserInfoType, signUpAuthInfo: signUp
     }
 }
 
-export const logIn = async(logInAuthInfo: logInAuthInfoType):Promise<string> =>{
-    const password = await db('auth').select('*').where('UserName', logInAuthInfo.UserName).first();
-    return password.Password;
+export const logIn = async(logInAuthInfo: ILogInAuthInfoType):Promise<string | undefined> =>{
+    const auth = await db<IAuthType>('auth').select('*').where('UserName', logInAuthInfo.UserName).first();
+    if(auth){
+        const {Password} = auth;
+        return Password;
+    }
+    else{
+        return undefined;
+    }
 }
