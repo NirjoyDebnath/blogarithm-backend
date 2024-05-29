@@ -2,7 +2,7 @@ import { ISignUpUserInfoType } from '../interfaces/user';
 import { IAuthType, ILogInAuthInfoType, ISignUpAuthInfoType } from '../interfaces/auth';
 import { IUserType } from '../interfaces/user';
 import db from '../database/db';
-import { Knex } from 'knex'
+import { Knex } from 'knex';
 
 export const signUp = async(userInfo: ISignUpUserInfoType, signUpAuthInfo: ISignUpAuthInfoType):Promise<IUserType> =>{
     const trx:Knex.Transaction = await db.transaction();
