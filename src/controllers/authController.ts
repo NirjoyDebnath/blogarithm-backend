@@ -1,5 +1,5 @@
 import * as authService from '../services/authService';
-import { ISignUpUserInputType, IUserType } from '../interfaces/user';
+import { ISignUpUserInputType, IUser } from '../interfaces/auth';
 import { Request, Response, NextFunction } from 'express';
 import { ILogInAuthInfoType } from '../interfaces/auth';
 import { sendResponse } from '../utils/responses';
@@ -12,7 +12,7 @@ export const signUp = async(req:Request, res: Response, next: NextFunction): Pro
             Password: req.body.Password,
             Email: req.body.Email,
         };
-        const user: IUserType = await authService.signUp(signUpUserInput);
+        const user: IUser = await authService.signUp(signUpUserInput);
         sendResponse(req, res, next, 200, user, 'Sign up successful', 'Success');
     } catch (err){
         next(err);

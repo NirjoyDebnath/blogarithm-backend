@@ -3,7 +3,7 @@ import { js2xml } from 'xml-js';
 import { jsonToPlainText, Options } from "json-to-plain-text";
 const json2html =require('json2html');
 
-function convertToAcceptType(type: string | undefined, data: object){
+function contentNegotiation(type: string | undefined, data: object){
     if(type === 'application/xml'){
         return js2xml(data, {compact: true, ignoreComment: true, spaces: 4});
     }
@@ -35,7 +35,7 @@ export const sendResponse = (
     message: string,
     status: string
 ) =>{
-    const response = convertToAcceptType(
+    const response = contentNegotiation(
         req.headers.accept, {
         data: data,
         message: message,
@@ -43,5 +43,7 @@ export const sendResponse = (
         }
     )
 
+    console.log(typeof response, typeof data)
+    res.set('content-type', req.headers.accept);
     res.status(statusCode).send(response);
 }
