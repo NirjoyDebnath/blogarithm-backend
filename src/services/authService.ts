@@ -10,18 +10,18 @@ export const signUp = async (signUpUserInput: ISignUpUserInputType) => {
     Email: signUpUserInput.Email,
     Name: signUpUserInput.Name,
     Role: 0,
-    JoinDate: new Date(),
+    JoinDate: new Date()
   };
   const signUpAuthInfo: ISignUpAuthInfoType = {
     UserName: signUpUserInput.UserName,
-    Password: signUpUserInput.Password,
+    Password: signUpUserInput.Password
   };
   const user: IUserType = await authRepository.signUp(userInfo, signUpAuthInfo);
   return user;
 };
 
 export const logIn = async (
-  logInUserInput: ILogInAuthInfoType,
+  logInUserInput: ILogInAuthInfoType
 ): Promise<string> => {
   const passwordFromDB: string | undefined =
     await authRepository.logIn(logInUserInput);

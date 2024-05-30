@@ -20,12 +20,12 @@ const connectToDatabase: knexDatabaseConnectionObjectType = {
       port: Number(process.env.databasePort),
       user: process.env.databaseUser,
       password: process.env.databasePassword,
-      database: process.env.databaseDatabase,
+      database: process.env.databaseDatabase
     },
     migrations: {
-      tableName: 'knex_migrations',
-    },
-  },
+      tableName: 'knex_migrations'
+    }
+  }
 };
 
 export default connectToDatabase;

@@ -5,7 +5,7 @@ import { IUserType } from '../interfaces/user';
 export const getAllUsers = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const users: IUserType[] = await userService.getAllUsers();
@@ -19,7 +19,7 @@ export const getAllUsers = async (
 export const deleteUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     await userService.deleteUser(Number(req.params.id));
@@ -33,7 +33,7 @@ export const deleteUser = async (
 export const updateNameById = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     await userService.updateNameById(Number(req.params.id), req.body.UserName);

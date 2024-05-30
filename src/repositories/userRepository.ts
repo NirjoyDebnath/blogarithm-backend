@@ -30,7 +30,7 @@ export const deleteUser = async (id: number): Promise<boolean> => {
 
 export const updateNameById = async (
   id: number,
-  newUserName: string,
+  newUserName: string
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('users')
     .where('Id', id)
