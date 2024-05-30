@@ -5,8 +5,7 @@ import { ENV } from './config/conf';
 
 const app = express();
 const port = ENV.Port || 3000;
-// add limit
-app.use(express.json());
+app.use(express.json({limit: '50kb'}));
 app.use('/api/users', userRouter.router);
 app.use('/api/auth', authRouter.router);
 

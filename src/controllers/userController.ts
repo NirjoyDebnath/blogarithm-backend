@@ -1,11 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
 import * as userService from '../services/userService';
-import { IUserType } from '../interfaces/user';
+import { IUser } from '../interfaces/user';
 import { sendResponse } from '../utils/responses';
 
 export const getAllUsers = async(req: Request, res: Response, next: NextFunction): Promise<void> =>{
     try{
-        const users: IUserType[] = await userService.getAllUsers();
+        const users: IUser[] = await userService.getAllUsers();
         ///user na thakle eta ekta alada response deya lagte pare
         sendResponse(req, res, next, 200, users, 'Got the users', 'Success');
     } catch(err){

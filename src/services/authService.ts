@@ -1,8 +1,7 @@
-import { ISignUpUserInputType } from "../interfaces/user";
-import { ISignUpUserInfoType } from "../interfaces/user";
+import { ISignUpUserInputType } from "../interfaces/auth";
+import { ISignUpUserInfoType, IUser, IAuth } from "../interfaces/auth";
 import { ILogInAuthInfoType, ISignUpAuthInfoType } from "../interfaces/auth";
 import * as authRepository from "../repositories/authRepository";
-import { IUserType } from "../interfaces/user";
 import { hash } from '../utils/passwordWorks';
 import { isHashMatched } from "../utils/passwordWorks";
 
@@ -16,24 +15,26 @@ export const signUp = async(signUpUserInput: ISignUpUserInputType) =>{
     };
     const hashedPassword: string = await hash(signUpUserInput.Password);
     const signUpAuthInfo: ISignUpAuthInfoType = {UserName: signUpUserInput.UserName, Password: hashedPassword};
-    const user: IUserType = await authRepository.signUp(userInfo, signUpAuthInfo);
+    const user: IUser = await authRepository.signUp(userInfo, signUpAuthInfo);
     return user;
 }
 
 export const logIn = async(logInUserInput: ILogInAuthInfoType):Promise<string> =>{
-    const passwordFromDB: string | undefined = await authRepository.logIn(logInUserInput);
+    const user: IAuth | undefined = await authRepository.logIn(logInUserInput);
 
-    if(!passwordFromDB){
-        return 'Not logged in';
+    if(!user){
+        throw new Error('Not logged in');
     }
     else {
+        //ekhane variable name change kora lagte pare
+        const passwordFromDB = user.Password;
         const hashedPassword: string = await hash(passwordFromDB);
         const passwordMatched: boolean = await isHashMatched(logInUserInput.Password, hashedPassword);
         if(passwordMatched){
             return 'Logged in';
         }
         else {
-            return 'Not logged in';
+            throw new Error('Not logged in')
         }
     }
 }

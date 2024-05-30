@@ -1,4 +1,5 @@
-export interface ISignUpUserInfoType{
+interface IUserAttributes{
+    Id: number,
     UserName: string,
     Email: string,
     Name: string,
@@ -6,13 +7,4 @@ export interface ISignUpUserInfoType{
     Role: number,
 }
 
-export interface IUserType extends ISignUpUserInfoType{
-    Id: number,
-}
-
-export interface IUserTypeResponse extends ISignUpUserInfoType{}
-
-export interface ISignUpUserInputType extends Omit<IUserType, 'Id' | 'JoinDate' | 'Role'>{
-    Password: string,
-}
-
+export interface IUser extends IUserAttributes{}
