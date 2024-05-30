@@ -14,11 +14,11 @@ export const deleteUser = async (id: number): Promise<void> => {
 
 export const updateNameById = async (
   id: number,
-  newUserName: string,
+  newUserName: string
 ): Promise<boolean> => {
   const isUpdated: boolean = await userRepository.updateNameById(
     id,
-    newUserName,
+    newUserName
   );
   if (!isUpdated) {
     throw new Error('Not Updated');

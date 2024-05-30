@@ -2,7 +2,7 @@ import { ISignUpUserInfoType } from '../interfaces/user';
 import {
   IAuthType,
   ILogInAuthInfoType,
-  ISignUpAuthInfoType,
+  ISignUpAuthInfoType
 } from '../interfaces/auth';
 import { IUserType } from '../interfaces/user';
 import db from '../database/db';
@@ -10,7 +10,7 @@ import { Knex } from 'knex';
 
 export const signUp = async (
   userInfo: ISignUpUserInfoType,
-  signUpAuthInfo: ISignUpAuthInfoType,
+  signUpAuthInfo: ISignUpAuthInfoType
 ): Promise<IUserType> => {
   const trx: Knex.Transaction = await db.transaction();
   try {
@@ -28,7 +28,7 @@ export const signUp = async (
 };
 
 export const logIn = async (
-  logInAuthInfo: ILogInAuthInfoType,
+  logInAuthInfo: ILogInAuthInfoType
 ): Promise<string | undefined> => {
   const auth = await db<IAuthType>('auth')
     .select('*')
