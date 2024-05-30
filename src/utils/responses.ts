@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import { js2xml } from 'xml-js';
 import { jsonToPlainText, Options } from "json-to-plain-text";
-const json2html = require('json2html');
+const json2html =require('json2html');
 
 function convertToAcceptType(type: string | undefined, data: object){
     if(type === 'application/xml'){

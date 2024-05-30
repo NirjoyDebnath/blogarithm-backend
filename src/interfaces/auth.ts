@@ -1,3 +1,5 @@
+// IUserInputType
+// ISignUpInputType extends IUserInputType
 export interface ISignUpAuthInfoType{
     UserName: string,
     Password: string,

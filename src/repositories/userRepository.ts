@@ -16,7 +16,7 @@ export const deleteUser = async(id:number):Promise<boolean> =>{
         }
         const {UserName} = user;
         await trx('Users').where('UserName', UserName).del();
-        await trx('auth').where('UserName', UserName).del();
+        await trx('Auth').where('UserName', UserName).del();
         await trx.commit();
         return true;
 
