@@ -1,4 +1,4 @@
-import express, {NextFunction, Request, Response} from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import userRouter from './routes/userRoute';
 import authRouter from './routes/authRoute';
@@ -12,10 +12,11 @@ app.use(express.json());
 app.use('/api/users', userRouter.router);
 app.use('/api/auth', authRouter.router);
 
-app.use((err:Error, req:Request, res: Response, next: NextFunction) =>{
-    res.status(500).json({error: err.message});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(500).json({ error: err.message });
 });
 
-app.listen(port, () =>{
-    console.log('Server connected at ' + port + ' ' +process.env.port);
+app.listen(port, () => {
+  console.log('Server connected at ' + port + ' ' + process.env.port);
 });
