@@ -23,19 +23,17 @@ function contentNegotiation(type: string | undefined, data: object) {
   }
 }
 
-export const sendResponse = (
+export const sendResponse = <T>(
   req: Request,
   res: Response,
   next: NextFunction,
   statusCode: number,
-  data: object | undefined,
-  message: string,
-  status: string
+  data: T,
+  message: string
 ) => {
   const response = contentNegotiation(req.headers.accept, {
     data: data,
-    message: message,
-    status: status
+    message: message
   });
 
   res.set('content-type', req.headers.accept);
