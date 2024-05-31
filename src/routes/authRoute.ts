@@ -4,10 +4,8 @@ import { logIn } from '../controllers/authController';
 
 const router = express.Router();
 
-router.route('/signUp')
-    .post(signUp);
+router.route('/signUp').post(signUp);
 
-router.route('/logIn')
-    .post(logIn)
+router.route('/logIn').post(logIn);
 
-export default {router};
+export default { router };
