@@ -1,15 +1,20 @@
-import { IUserType } from '../interfaces/user';
+import { IUser } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 
-export const getAllUsers = async():Promise<IUserType[]> =>{
+export const getAllUsers = async():Promise<IUser[]> =>{
     return userRepository.getAllUsers();
 }
 
+export const getUserById = async(id:number):Promise<IUser | undefined> =>{
+    return userRepository.getUserById(id);
+}
+
 export const deleteUser = async(id:number):Promise<void> =>{
-    const deleteId: boolean = await userRepository.deleteUser(id);
-    if(!deleteId){
-        throw new Error('Delete unsuccessful');
+    const user = await getUserById(id);
+    if(!user){
+        throw new Error('No such user');
     }
+    await userRepository.deleteUser(user.UserName);
 }
 
 export const updateNameById = async (id: number, newUserName: string):Promise<boolean> =>{

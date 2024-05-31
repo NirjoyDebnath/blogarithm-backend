@@ -1,14 +1,11 @@
 import express, {NextFunction, Request, Response} from 'express';
-import dotenv from 'dotenv';
 import userRouter from './routes/userRoute';
 import authRouter from './routes/authRoute';
-
-dotenv.config();
+import { ENV } from './config/conf';
 
 const app = express();
-const port = process.env.port || 3000;
-
-app.use(express.json());
+const port = ENV.Port || 3000;
+app.use(express.json({limit: '50kb'}));
 app.use('/api/users', userRouter.router);
 app.use('/api/auth', authRouter.router);
 
