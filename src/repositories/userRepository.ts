@@ -14,6 +14,16 @@ export const getUserById = async (id: number): Promise<IUser | undefined> => {
   return users;
 };
 
+export const getUserByUserName = async (
+  userName: string
+): Promise<IUser | undefined> => {
+  const users: IUser | undefined = await db<IUser>('Users')
+    .select('*')
+    .where('UserName', userName)
+    .first();
+  return users;
+};
+
 export const deleteUser = async (userName: string): Promise<boolean> => {
   const trx = await db.transaction();
 

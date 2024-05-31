@@ -4,6 +4,8 @@ import { ILogInAuthInfoType, ISignUpAuthInfoType } from '../interfaces/auth';
 import * as authRepository from '../repositories/authRepository';
 import { hash } from '../utils/passwordWorks';
 import { isHashMatched } from '../utils/passwordWorks';
+import { getUserByUserName } from '../repositories/userRepository';
+import { getToken } from '../utils/helper';
 
 export const signUp = async (signUpUserInput: ISignUpUserInputType) => {
   const userInfo: ISignUpUserInfoType = {
@@ -25,19 +27,26 @@ export const signUp = async (signUpUserInput: ISignUpUserInputType) => {
 export const logIn = async (
   logInUserInput: ILogInAuthInfoType
 ): Promise<string> => {
-  const user: IAuth | undefined = await authRepository.logIn(logInUserInput);
+  const auth: IAuth | undefined = await authRepository.logIn(logInUserInput);
 
-  if (!user) {
+  if (!auth) {
     throw new Error('Invalid username');
   } else {
     //ekhane variable name change kora lagte pare
-    const passwordFromDB = user.Password;
+    const { UserName, Password } = auth;
     const passwordMatched: boolean = await isHashMatched(
       logInUserInput.Password,
-      passwordFromDB
+      Password
     );
     if (passwordMatched) {
-      return 'Logged in';
+      const user = await getUserByUserName(UserName);
+
+      if (!user) {
+        throw new Error('ekhane kokhono ashbe na');
+      }
+
+      const token: string = await getToken(user);
+      return token;
     } else {
       throw new Error('Password invalid');
     }
