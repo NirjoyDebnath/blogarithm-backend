@@ -17,13 +17,16 @@ export const getAllUsers = async (
   }
 };
 
-export const deleteUser = async (
+export const deleteUserById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.deleteUser(Number(req.params.id));
+    await userService.deleteUserById(
+      Number(req.params.id),
+      req.headers.authorization
+    );
     sendResponse<undefined>(req, res, next, 200, undefined, 'User deleted');
   } catch (err) {
     console.log('User delete hoy nai');
