@@ -6,6 +6,7 @@ const router: Router = Router();
 router.route('/')
   .get(userController.getAllUsers)
   .delete(userController.deleteUser)
+  .patch(userController.updateName);
 
 router
   .route('/:id')

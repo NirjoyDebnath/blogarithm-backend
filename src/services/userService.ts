@@ -3,9 +3,6 @@ import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/helper';
 import { ITokenInfo } from '../interfaces/token';
 
-import jwt from 'jsonwebtoken';
-import { ENV } from '../config/conf';
-
 export const getAllUsers = async (): Promise<IUser[]> => {
   return userRepository.getAllUsers();
 };
@@ -41,6 +38,25 @@ export const updateNameById = async (
 ): Promise<boolean> => {
   const isUpdated: boolean = await userRepository.updateNameById(
     id,
+    newUserName
+  );
+  if (!isUpdated) {
+    throw new Error('Not Updated');
+  }
+  return isUpdated;
+};
+
+export const updateName = async (
+  token:  string | undefined,
+  newUserName: string
+): Promise<boolean> => {
+  const tokenInfo: ITokenInfo = await verifyToken(token);
+  const user:IUser | undefined = await userRepository.getUserByUserName(tokenInfo.userName);
+  if (!user) {
+    throw new Error('No such user');
+  }
+  const isUpdated: boolean = await userRepository.updateNameByUserName(
+    user.UserName,
     newUserName
   );
   if (!isUpdated) {

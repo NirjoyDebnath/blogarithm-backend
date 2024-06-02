@@ -47,3 +47,13 @@ export const updateNameById = async (
     .update({ Name: newUserName });
   return isUpdated;
 };
+
+export const updateNameByUserName = async (
+  userName: string,
+  newUserName: string
+): Promise<boolean> => {
+  const isUpdated: boolean = await db('users')
+    .where('UserName', userName)
+    .update({ Name: newUserName });
+  return isUpdated;
+};
