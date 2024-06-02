@@ -1,5 +1,7 @@
 import { IUser } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
+import { verifyToken } from '../utils/helper';
+import { ITokenInfo } from '../interfaces/token';
 
 import jwt from 'jsonwebtoken';
 import { ENV } from '../config/conf';
@@ -14,26 +16,24 @@ export const getUserById = async (id: number): Promise<IUser | undefined> => {
 
 export const deleteUserById = async (
   id: number,
-  token: string | undefined
 ): Promise<void> => {
-  if (!token) {
-    throw new Error('You are not authorised');
+  const user:IUser | undefined = await getUserById(id);
+  if (!user) {
+    throw new Error('No such user');
   }
-  const isValid = jwt.verify(token, ENV.SecretKey || 'hello', (err, data) => {
-    console.log(err?.message, data);
-  });
-
-  // const user = await getUserById(id);
-  // if (!user) {
-  //   throw new Error('No such user');
-  // }
-  // await userRepository.deleteUserById(user.UserName);
+  await userRepository.deleteUserByUserName(user.UserName);
 };
 
-deleteUserById(
-  10,
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Ik5pcmpveTkiLCJuYW1lIjoiTmlyam95IERlYm5hdGgiLCJyb2xlIjowLCJpYXQiOjE3MTcxNTY1OTAsImV4cCI6MTcxNzI0Mjk5MH0.LviAmklRAz5oDdvh_1n7NyYGg2e3bsFBnri4ui8TJ3M'
-);
+export const deleteUser = async (
+  token: string | undefined
+): Promise<void> => {
+  const tokenInfo: ITokenInfo = await verifyToken(token);
+  const user:IUser | undefined = await userRepository.getUserByUserName(tokenInfo.userName);
+  if (!user) {
+    throw new Error('No such user');
+  }
+  await userRepository.deleteUserByUserName(user.UserName);
+};
 
 export const updateNameById = async (
   id: number,

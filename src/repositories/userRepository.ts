@@ -24,7 +24,7 @@ export const getUserByUserName = async (
   return users;
 };
 
-export const deleteUserById = async (userName: string): Promise<boolean> => {
+export const deleteUserByUserName = async (userName: string): Promise<boolean> => {
   const trx = await db.transaction();
 
   try {
