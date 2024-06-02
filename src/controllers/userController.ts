@@ -24,7 +24,22 @@ export const deleteUserById = async (
 ): Promise<void> => {
   try {
     await userService.deleteUserById(
-      Number(req.params.id),
+      Number(req.params.id)
+    );
+    sendResponse<undefined>(req, res, next, 200, undefined, 'User deleted');
+  } catch (err) {
+    console.log('User delete hoy nai');
+    next(err);
+  }
+};
+
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await userService.deleteUser(
       req.headers.authorization
     );
     sendResponse<undefined>(req, res, next, 200, undefined, 'User deleted');
