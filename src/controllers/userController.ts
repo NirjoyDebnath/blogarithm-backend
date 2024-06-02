@@ -62,3 +62,17 @@ export const updateNameById = async (
     next(err);
   }
 };
+
+export const updateName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await userService.updateName(req.headers.authorization, req.body.UserName);
+    sendResponse<undefined>(req, res, next, 200, undefined, 'User Updated');
+  } catch (err) {
+    console.log('User update hoy nai');
+    next(err);
+  }
+};
