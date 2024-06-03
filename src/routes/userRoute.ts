@@ -3,10 +3,7 @@ import * as userController from './../controllers/userController';
 
 const router: Router = Router();
 
-router.route('/')
-  .get(userController.getAllUsers)
-  .delete(userController.deleteUser)
-  .patch(userController.updateName);
+router.route('/').get(userController.getAllUsers);
 
 router
   .route('/:id')

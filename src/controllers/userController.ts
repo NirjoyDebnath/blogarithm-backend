@@ -10,8 +10,7 @@ export const getAllUsers = async (
 ): Promise<void> => {
   try {
     const users: IUser[] = await userService.getAllUsers();
-    ///user na thakle eta ekta alada response deya lagte pare
-    sendResponse<IUser[]>(req, res, next, 200, users, 'Got the users');
+    sendResponse<IUser[]>(req, res, 200, users, 'Got the users');
   } catch (err) {
     next(err);
   }
@@ -24,25 +23,10 @@ export const deleteUserById = async (
 ): Promise<void> => {
   try {
     await userService.deleteUserById(
-      Number(req.params.id)
-    );
-    sendResponse<undefined>(req, res, next, 200, undefined, 'User deleted');
-  } catch (err) {
-    console.log('User delete hoy nai');
-    next(err);
-  }
-};
-
-export const deleteUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    await userService.deleteUser(
+      Number(req.params.id),
       req.headers.authorization
     );
-    sendResponse<undefined>(req, res, next, 200, undefined, 'User deleted');
+    sendResponse<undefined>(req, res, 200, undefined, 'User deleted');
   } catch (err) {
     console.log('User delete hoy nai');
     next(err);
@@ -55,22 +39,12 @@ export const updateNameById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updateNameById(Number(req.params.id), req.body.UserName);
-    sendResponse<undefined>(req, res, next, 200, undefined, 'User Updated');
-  } catch (err) {
-    console.log('User update hoy nai');
-    next(err);
-  }
-};
-
-export const updateName = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    await userService.updateName(req.headers.authorization, req.body.UserName);
-    sendResponse<undefined>(req, res, next, 200, undefined, 'User Updated');
+    await userService.updateNameById(
+      Number(req.params.id),
+      req.headers.authorization,
+      req.body.UserName
+    );
+    sendResponse<undefined>(req, res, 200, undefined, 'User Updated');
   } catch (err) {
     console.log('User update hoy nai');
     next(err);

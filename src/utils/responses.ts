@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { js2xml } from 'xml-js';
 import { jsonToPlainText, Options } from 'json-to-plain-text';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const json2html = require('json2html');
 
 function contentNegotiation(type: string | undefined, data: object) {
@@ -26,7 +27,6 @@ function contentNegotiation(type: string | undefined, data: object) {
 export const sendResponse = <T>(
   req: Request,
   res: Response,
-  next: NextFunction,
   statusCode: number,
   data: T,
   message: string
