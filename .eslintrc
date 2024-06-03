@@ -9,8 +9,8 @@
   ],
   "rules": {
     // "prettier/prettier": ["error"],
-    // "@typescript-eslint/no-var-requires": "off"
-    "prettier/prettier": "error",
-    "endOfLine": "auto"
+    "@typescript-eslint/no-var-requires": 1,
+    "prettier/prettier": 0
+    // "endOfLine": "auto"
   }
 }
