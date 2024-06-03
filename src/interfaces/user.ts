@@ -8,3 +8,8 @@ interface IUserAttributes {
 }
 
 export interface IUser extends IUserAttributes {}
+
+export enum IRole {
+  user = 0,
+  admin = 1
+}
