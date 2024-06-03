@@ -2,65 +2,63 @@ import { IUser } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/helper';
 import { ITokenInfo } from '../interfaces/token';
+import { IRole } from '../interfaces/user';
 
 export const getAllUsers = async (): Promise<IUser[]> => {
-  return userRepository.getAllUsers();
+  const users: IUser[] = await userRepository.getAllUsers();
+  return users;
 };
 
 export const getUserById = async (id: number): Promise<IUser | undefined> => {
-  return userRepository.getUserById(id);
+  const user: IUser | undefined = await userRepository.getUserById(id);
+  return user;
 };
 
 export const deleteUserById = async (
   id: number,
-): Promise<void> => {
-  const user:IUser | undefined = await getUserById(id);
-  if (!user) {
-    throw new Error('No such user');
-  }
-  await userRepository.deleteUserByUserName(user.UserName);
-};
-
-export const deleteUser = async (
   token: string | undefined
 ): Promise<void> => {
   const tokenInfo: ITokenInfo = await verifyToken(token);
-  const user:IUser | undefined = await userRepository.getUserByUserName(tokenInfo.userName);
+  const user = await userRepository.getUserById(id);
   if (!user) {
     throw new Error('No such user');
   }
-  await userRepository.deleteUserByUserName(user.UserName);
+  if (tokenInfo.role === IRole.admin) {
+    await userRepository.deleteUserByUserName(user.UserName);
+  } else {
+    if (tokenInfo.userName === user.UserName) {
+      await userRepository.deleteUserByUserName(user.UserName);
+    } else {
+      throw new Error('You are not authorized for this action');
+    }
+  }
 };
 
 export const updateNameById = async (
   id: number,
-  newUserName: string
-): Promise<boolean> => {
-  const isUpdated: boolean = await userRepository.updateNameById(
-    id,
-    newUserName
-  );
-  if (!isUpdated) {
-    throw new Error('Not Updated');
-  }
-  return isUpdated;
-};
-
-export const updateName = async (
-  token:  string | undefined,
+  token: string | undefined,
   newUserName: string
 ): Promise<boolean> => {
   const tokenInfo: ITokenInfo = await verifyToken(token);
-  const user:IUser | undefined = await userRepository.getUserByUserName(tokenInfo.userName);
+  const user = await userRepository.getUserById(id);
   if (!user) {
     throw new Error('No such user');
   }
-  const isUpdated: boolean = await userRepository.updateNameByUserName(
-    user.UserName,
-    newUserName
-  );
-  if (!isUpdated) {
-    throw new Error('Not Updated');
+  if (tokenInfo.role === IRole.admin) {
+    const isUpdated: boolean = await userRepository.updateNameById(
+      user.Id,
+      newUserName
+    );
+    return isUpdated;
+  } else {
+    if (tokenInfo.userName === user.UserName) {
+      const isUpdated: boolean = await userRepository.updateNameByUserName(
+        user.UserName,
+        newUserName
+      );
+      return isUpdated;
+    } else {
+      throw new Error('You are not authorized for this action');
+    }
   }
-  return isUpdated;
 };
