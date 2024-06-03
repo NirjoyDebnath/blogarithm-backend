@@ -14,7 +14,19 @@ export const getUserById = async (id: number): Promise<IUser | undefined> => {
   return users;
 };
 
-export const deleteUser = async (userName: string): Promise<boolean> => {
+export const getUserByUserName = async (
+  userName: string
+): Promise<IUser | undefined> => {
+  const users: IUser | undefined = await db<IUser>('Users')
+    .select('*')
+    .where('UserName', userName)
+    .first();
+  return users;
+};
+
+export const deleteUserByUserName = async (
+  userName: string
+): Promise<boolean> => {
   const trx = await db.transaction();
 
   try {
@@ -34,6 +46,16 @@ export const updateNameById = async (
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('users')
     .where('Id', id)
+    .update({ Name: newUserName });
+  return isUpdated;
+};
+
+export const updateNameByUserName = async (
+  userName: string,
+  newUserName: string
+): Promise<boolean> => {
+  const isUpdated: boolean = await db('users')
+    .where('UserName', userName)
     .update({ Name: newUserName });
   return isUpdated;
 };
