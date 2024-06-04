@@ -4,7 +4,6 @@ export class appError extends Error {
   status: string = 'Error';
   code?: string;
   sqlMessage?: string;
-  isKnexError: boolean;
 
   constructor(statusCode: number, message: string, code?: string) {
     super(message);
@@ -12,6 +11,5 @@ export class appError extends Error {
     this.isOperational = true;
     this.status = 'Fail';
     this.name = code || this.name;
-    this.isKnexError = code !== undefined;
   }
 }

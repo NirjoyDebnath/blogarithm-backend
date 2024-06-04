@@ -33,7 +33,6 @@ export const logIn = async (
   if (!auth) {
     throw new appError(400, 'Invalid username');
   } else {
-    //ekhane variable name change kora lagte pare
     const { UserName, Password } = auth;
     const passwordMatched: boolean = await isHashMatched(
       logInUserInput.Password,

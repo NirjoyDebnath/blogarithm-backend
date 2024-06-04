@@ -10,6 +10,17 @@ const jsonWebTokenError: appError = new appError(
   'You are not authorised.'
 );
 
+const messageParser = (errorName: string, errorMessage: string): string => {
+  switch (errorName) {
+    case 'ER_DUP_ENTRY':
+      const message: string = errorMessage;
+      errorMessage =
+        message.split(' ', 4).join(' ') + ' ' + message.split('_')[1];
+      break;
+  }
+  return errorMessage;
+};
+
 export const globalErrorHandler = (
   err: appError,
   req: Request,
@@ -31,21 +42,7 @@ export const globalErrorHandler = (
         err.message = 'Something went wrong';
         err.status = 'error';
     }
-  } else if (err.isKnexError === true) {
-    const errorName: string = err.name;
-    switch (errorName) {
-      case 'ER_DUP_ENTRY':
-        const message: string = err.message;
-        err.message =
-          message.split(' ', 4).join(' ') + ' ' + message.split('_')[1];
-        break;
-      default:
-        err.statusCode = 500;
-        err.message = 'Something went wrong';
-        err.status = 'error';
-    }
   }
-
   res
     .status(err.statusCode)
     .json({ status: err.status, message: err.message, name: err.name });

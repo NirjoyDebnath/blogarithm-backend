@@ -12,5 +12,6 @@ export const ENV = {
   DatabasePassword: process.env.DatabasePassword,
   DatabaseDatabase: process.env.DatabaseDatabase,
   Environment: process.env.Environment,
-  SecretKey: process.env.SecretKey
+  SecretKey: process.env.SecretKey,
+  JwtTokenExpire: process.env.JwtTokenExpire
 };

@@ -2,7 +2,7 @@ import { IUser } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/jwtHelper';
 import { ITokenInfo } from '../interfaces/token';
-import { IRole } from '../interfaces/user';
+import { Role } from '../interfaces/user';
 import { appError } from '../utils/appError';
 
 export const getAllUsers = async (): Promise<IUser[]> => {
@@ -24,7 +24,7 @@ export const deleteUserById = async (
   if (!user) {
     throw new appError(404, 'No such user');
   }
-  if (tokenInfo.role === IRole.admin) {
+  if (tokenInfo.role === Role.admin) {
     await userRepository.deleteUserByUserName(user.UserName);
   } else {
     if (tokenInfo.userName === user.UserName) {
@@ -45,7 +45,7 @@ export const updateNameById = async (
   if (!user) {
     throw new appError(404, 'No such user');
   }
-  if (tokenInfo.role === IRole.admin) {
+  if (tokenInfo.role === Role.admin) {
     const isUpdated: boolean = await userRepository.updateNameById(
       user.Id,
       newUserName

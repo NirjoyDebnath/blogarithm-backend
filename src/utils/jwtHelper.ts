@@ -17,9 +17,11 @@ export const getToken = async (user: IUser): Promise<string> => {
     name: user.Name,
     role: user.Role
   };
-  const token = jwt.sign(payload, ENV.SecretKey || 'hello', {
-    expiresIn: '1d'
-  });
+  const token =
+    'bearer ' +
+    jwt.sign(payload, ENV.SecretKey || 'hello', {
+      expiresIn: ENV.JwtTokenExpire || '2d'
+    });
   return token;
 };
 
@@ -29,6 +31,7 @@ export const verifyToken = async (
   if (!token) {
     throw new appError(401, 'No token provided');
   }
+  token = token.split(' ')[1];
   const decodedToken = jwt.verify(token, ENV.SecretKey || 'hello');
   const tokenInfo = getTokenInfoFromToken(decodedToken);
   return tokenInfo;
