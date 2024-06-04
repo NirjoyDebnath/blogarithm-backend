@@ -17,7 +17,7 @@ export const signUp = async (
       Email: req.body.Email
     };
     const user: IUser = await authService.signUp(signUpUserInput);
-    sendResponse<IUser>(req, res, next, 200, user, 'Sign up successful');
+    sendResponse<IUser>(req, res, 200, user, 'Sign up successful');
   } catch (err) {
     next(err);
   }
@@ -35,7 +35,7 @@ export const logIn = async (
     };
 
     const logInStatus: string = await authService.logIn(logInUserInput);
-    sendResponse<string>(req, res, next, 200, logInStatus, 'Log in successful');
+    sendResponse<string>(req, res, 200, logInStatus, 'Log in successful');
   } catch (err) {
     next(err);
   }
