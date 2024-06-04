@@ -1,8 +1,9 @@
 import { IUser } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
-import { verifyToken } from '../utils/helper';
+import { verifyToken } from '../utils/jwtHelper';
 import { ITokenInfo } from '../interfaces/token';
 import { IRole } from '../interfaces/user';
+import { appError } from '../utils/appError';
 
 export const getAllUsers = async (): Promise<IUser[]> => {
   const users: IUser[] = await userRepository.getAllUsers();
@@ -21,7 +22,7 @@ export const deleteUserById = async (
   const tokenInfo: ITokenInfo = await verifyToken(token);
   const user = await userRepository.getUserById(id);
   if (!user) {
-    throw new Error('No such user');
+    throw new appError(404, 'No such user');
   }
   if (tokenInfo.role === IRole.admin) {
     await userRepository.deleteUserByUserName(user.UserName);
@@ -29,7 +30,7 @@ export const deleteUserById = async (
     if (tokenInfo.userName === user.UserName) {
       await userRepository.deleteUserByUserName(user.UserName);
     } else {
-      throw new Error('You are not authorized for this action');
+      throw new appError(400, 'You are not authorised.');
     }
   }
 };
@@ -42,7 +43,7 @@ export const updateNameById = async (
   const tokenInfo: ITokenInfo = await verifyToken(token);
   const user = await userRepository.getUserById(id);
   if (!user) {
-    throw new Error('No such user');
+    throw new appError(404, 'No such user');
   }
   if (tokenInfo.role === IRole.admin) {
     const isUpdated: boolean = await userRepository.updateNameById(
@@ -58,7 +59,7 @@ export const updateNameById = async (
       );
       return isUpdated;
     } else {
-      throw new Error('You are not authorized for this action');
+      throw new appError(400, 'You are not authorised.');
     }
   }
 };
