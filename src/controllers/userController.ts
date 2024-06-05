@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
-import { IUser } from '../interfaces/user';
 import { sendResponse } from '../utils/responses';
+import { userDTO } from '../services/DTOs/dtoHealper';
 
 export const getAllUsers = async (
   req: Request,
@@ -9,8 +9,8 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const users: IUser[] = await userService.getAllUsers();
-    sendResponse<IUser[]>(req, res, 200, users, 'Got the users');
+    const users: userDTO[] = await userService.getAllUsers();
+    sendResponse<userDTO[]>(req, res, 200, users, 'Got the users');
   } catch (err) {
     next(err);
   }

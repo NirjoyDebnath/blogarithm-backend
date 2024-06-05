@@ -3,10 +3,12 @@ import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/helper';
 import { ITokenInfo } from '../interfaces/token';
 import { IRole } from '../interfaces/user';
+import { getAllUsersDTO, userDTO } from './DTOs/dtoHealper';
 
-export const getAllUsers = async (): Promise<IUser[]> => {
+export const getAllUsers = async (): Promise<userDTO[]> => {
   const users: IUser[] = await userRepository.getAllUsers();
-  return users;
+  const usersDTO: getAllUsersDTO = new getAllUsersDTO(users);
+  return usersDTO.users;
 };
 
 export const getUserById = async (id: number): Promise<IUser | undefined> => {
