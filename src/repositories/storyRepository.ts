@@ -1,18 +1,10 @@
-import { Knex } from 'knex';
-import { CreateStoryDTO, IStory } from '../interfaces/story';
+import { CreateStoryDTO, IStory, UpdateStoryDTO } from '../interfaces/story';
 import db from '../database/db';
 
 export const createStory = async (
   createStoryDTO: CreateStoryDTO
 ): Promise<void> => {
-  const trx: Knex.Transaction = await db.transaction();
-  try {
-    await trx('Stories').insert(createStoryDTO);
-    await trx.commit();
-  } catch (err) {
-    await trx.rollback();
-    throw err;
-  }
+  await db('Stories').insert(createStoryDTO);
 };
 
 export const getAllStories = async (): Promise<IStory[]> => {
@@ -26,4 +18,15 @@ export const getStoryById = async (id: number): Promise<IStory | undefined> => {
     .where('Id', id)
     .first();
   return story;
+};
+
+export const updateStoryById = async (
+  id: number,
+  updateStoryDTO: UpdateStoryDTO
+): Promise<void> => {
+  await db('Stories').update(updateStoryDTO).where('Id', id);
+};
+
+export const deleteStoryById = async (id: number): Promise<void> => {
+  await db('Stories').del().where('Id', id);
 };

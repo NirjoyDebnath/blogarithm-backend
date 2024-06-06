@@ -49,3 +49,29 @@ export const getStoryById = async (
     next(err);
   }
 };
+
+export const updateStoryById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await storyService.updateStoryById(Number(req.params.id), req.body);
+    sendResponse<undefined>(req, res, 200, undefined, 'Updated');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteStoryById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await storyService.deleteStoryById(Number(req.params.id));
+    sendResponse<undefined>(req, res, 200, undefined, 'Deleted');
+  } catch (err) {
+    next(err);
+  }
+};

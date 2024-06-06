@@ -2,7 +2,9 @@ import {
   CreateStoryDTO,
   ICreateStoryInfo,
   IStory,
-  StoryDTO
+  IUpdateStoryInput,
+  StoryDTO,
+  UpdateStoryDTO
 } from '../../interfaces/story';
 
 export class getCreateStoryDTO implements CreateStoryDTO {
@@ -50,6 +52,23 @@ export class getStoryDTO implements StoryDTO {
       this.AuthorUserName == undefined ||
       this.AuthorName == undefined
     ) {
+      throw new Error('Data missing');
+    }
+  }
+}
+
+export class getUpdateStoryDTO implements UpdateStoryDTO {
+  Title?: string;
+  Description?: string;
+
+  constructor(updateStoryInput: IUpdateStoryInput) {
+    if (updateStoryInput.Title) this.Title = updateStoryInput.Title;
+    if (updateStoryInput.Description)
+      this.Description = updateStoryInput.Description;
+    this.dataValidate();
+  }
+  dataValidate() {
+    if (this.Title == undefined && this.Description == undefined) {
       throw new Error('Data missing');
     }
   }
