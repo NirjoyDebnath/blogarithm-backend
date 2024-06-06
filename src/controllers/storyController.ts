@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as storyService from '../services/storyService';
 import { sendResponse } from '../utils/responses';
+import { StoryDTO } from '../interfaces/story';
 
 export const createStory = async (
   req: Request,
@@ -16,6 +17,34 @@ export const createStory = async (
       undefined,
       'Story create successful'
     );
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllStories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const stories: StoryDTO[] = await storyService.getAllStories();
+    sendResponse<StoryDTO[]>(req, res, 200, stories, 'All Stories');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getStoryById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const story: StoryDTO = await storyService.getStoryById(
+      Number(req.params.id)
+    );
+    sendResponse<StoryDTO>(req, res, 200, story, 'Got the story');
   } catch (err) {
     next(err);
   }
