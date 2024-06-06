@@ -31,8 +31,13 @@ export const createStory = async (
   await storyRepository.createStory(createStoryDTO);
 };
 
-export const getAllStories = async (): Promise<StoryDTO[]> => {
-  const stories: IStory[] = await storyRepository.getAllStories();
+export const getStories = async (
+  userName: string | undefined
+): Promise<StoryDTO[]> => {
+  const stories: IStory[] = userName
+    ? await storyRepository.getStoriesByUserName(userName)
+    : await storyRepository.getAllStories();
+
   const storyDTO: StoryDTO[] = [];
   stories.forEach((story) => {
     storyDTO.push(new getStoryDTO(story));

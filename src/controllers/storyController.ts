@@ -22,13 +22,15 @@ export const createStory = async (
   }
 };
 
-export const getAllStories = async (
+export const getStories = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const stories: StoryDTO[] = await storyService.getAllStories();
+    const stories: StoryDTO[] = await storyService.getStories(
+      req.query.userName as string | undefined
+    );
     sendResponse<StoryDTO[]>(req, res, 200, stories, 'All Stories');
   } catch (err) {
     next(err);

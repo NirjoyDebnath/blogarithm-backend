@@ -20,6 +20,15 @@ export const getStoryById = async (id: number): Promise<IStory | undefined> => {
   return story;
 };
 
+export const getStoriesByUserName = async (
+  AuthorUserName: string
+): Promise<IStory[]> => {
+  const stories: IStory[] = await db<IStory>('Stories')
+    .select('*')
+    .where('AuthorUserName', AuthorUserName);
+  return stories;
+};
+
 export const updateStoryById = async (
   id: number,
   updateStoryDTO: UpdateStoryDTO
