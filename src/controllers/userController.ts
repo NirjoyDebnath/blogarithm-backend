@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 import { sendResponse } from '../utils/responses';
-import { userDTO } from '../services/DTOs/dtoHealper';
+import { UserDTO } from '../interfaces/user';
 
 export const getAllUsers = async (
   req: Request,
@@ -9,8 +9,21 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const users: userDTO[] = await userService.getAllUsers();
-    sendResponse<userDTO[]>(req, res, 200, users, 'Got the users');
+    const users: UserDTO[] = await userService.getAllUsers();
+    sendResponse<UserDTO[]>(req, res, 200, users, 'Got the users');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user: UserDTO = await userService.getUserById(Number(req.params.id));
+    sendResponse<UserDTO>(req, res, 200, user, 'Got the users');
   } catch (err) {
     next(err);
   }
@@ -42,7 +55,7 @@ export const updateNameById = async (
     await userService.updateNameById(
       Number(req.params.id),
       req.headers.authorization,
-      req.body.UserName
+      req.body
     );
     sendResponse<undefined>(req, res, 200, undefined, 'User Updated');
   } catch (err) {

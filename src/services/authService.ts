@@ -1,38 +1,40 @@
-import { ISignUpUserInputType } from '../interfaces/auth';
-import { ISignUpUserInfoType, IUser, IAuth } from '../interfaces/auth';
-import { ILogInAuthInfoType, ISignUpAuthInfoType } from '../interfaces/auth';
+import {
+  ISignUpUserInputType,
+  LogInDTO,
+  SignUpAuthDTO,
+  SignupUserDTO
+} from '../interfaces/auth';
+import { IAuth } from '../interfaces/auth';
+import { ILogInAuthInfoType } from '../interfaces/auth';
 import * as authRepository from '../repositories/authRepository';
 import { hash } from '../utils/passwordWorks';
 import { isHashMatched } from '../utils/passwordWorks';
 import { getUserByUserName } from '../repositories/userRepository';
 import { getToken } from '../utils/helper';
+import {
+  getLogInDTO,
+  getSignupAuthDTO,
+  getSignupUserDTO
+} from './DTOs/authDTO';
 
-export const signUp = async (signUpUserInput: ISignUpUserInputType) => {
-  const userInfo: ISignUpUserInfoType = {
-    UserName: signUpUserInput.UserName,
-    Email: signUpUserInput.Email,
-    Name: signUpUserInput.Name,
-    Role: 0,
-    JoinDate: new Date()
-  };
-  const hashedPassword: string = await hash(signUpUserInput.Password);
-  const signUpAuthInfo: ISignUpAuthInfoType = {
-    UserName: signUpUserInput.UserName,
-    Password: hashedPassword
-  };
-  const user: IUser = await authRepository.signUp(userInfo, signUpAuthInfo);
-  return user;
+export const signUp = async (
+  signUpUserInput: ISignUpUserInputType
+): Promise<void> => {
+  const signUpUserDTO: SignupUserDTO = new getSignupUserDTO(signUpUserInput);
+  const signUpAuthDTO: SignUpAuthDTO = new getSignupAuthDTO(signUpUserInput);
+  signUpAuthDTO.Password = await hash(signUpUserInput.Password);
+  await authRepository.signUp(signUpUserDTO, signUpAuthDTO);
 };
 
 export const logIn = async (
   logInUserInput: ILogInAuthInfoType
 ): Promise<string> => {
-  const auth: IAuth | undefined = await authRepository.logIn(logInUserInput);
+  const logInDTO: LogInDTO = new getLogInDTO(logInUserInput);
+  const auth: IAuth | undefined = await authRepository.logIn(logInDTO);
 
   if (!auth) {
     throw new Error('Invalid username');
   } else {
-    //ekhane variable name change kora lagte pare
     const { UserName, Password } = auth;
     const passwordMatched: boolean = await isHashMatched(
       logInUserInput.Password,
