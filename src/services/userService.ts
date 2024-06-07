@@ -1,18 +1,29 @@
-import { IUser } from '../interfaces/user';
+import {
+  IUser,
+  UserDTO,
+  IUpdateNameInput,
+  UpdateNameDTO
+} from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/jwtHelper';
 import { ITokenInfo } from '../interfaces/token';
+import { getAllUsersDTO, getUpdateNameDTO, getUserDTO } from './DTOs/userDTO';
 import { Role } from '../interfaces/user';
 import { appError } from '../utils/appError';
 
-export const getAllUsers = async (): Promise<IUser[]> => {
+export const getAllUsers = async (): Promise<UserDTO[]> => {
   const users: IUser[] = await userRepository.getAllUsers();
-  return users;
+  const usersDTO: getAllUsersDTO = new getAllUsersDTO(users);
+  return usersDTO.users;
 };
 
-export const getUserById = async (id: number): Promise<IUser | undefined> => {
+export const getUserById = async (id: number): Promise<UserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
-  return user;
+  if (!user) {
+    throw new Error('No user found');
+  }
+  const userDTO: UserDTO = new getUserDTO(user);
+  return userDTO;
 };
 
 export const deleteUserById = async (
@@ -38,8 +49,9 @@ export const deleteUserById = async (
 export const updateNameById = async (
   id: number,
   token: string | undefined,
-  newUserName: string
+  newUserName: IUpdateNameInput
 ): Promise<boolean> => {
+  const updateNameDTO: UpdateNameDTO = new getUpdateNameDTO(newUserName);
   const tokenInfo: ITokenInfo = await verifyToken(token);
   const user = await userRepository.getUserById(id);
   if (!user) {
@@ -48,14 +60,14 @@ export const updateNameById = async (
   if (tokenInfo.role === Role.admin) {
     const isUpdated: boolean = await userRepository.updateNameById(
       user.Id,
-      newUserName
+      updateNameDTO.Name
     );
     return isUpdated;
   } else {
     if (tokenInfo.userName === user.UserName) {
       const isUpdated: boolean = await userRepository.updateNameByUserName(
         user.UserName,
-        newUserName
+        updateNameDTO.Name
       );
       return isUpdated;
     } else {
