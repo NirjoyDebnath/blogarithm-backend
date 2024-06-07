@@ -1,13 +1,14 @@
 import {
-  CreateStoryDTO,
+  ICreateStoryDTO,
   ICreateStoryInfo,
   IStory,
   IUpdateStoryInput,
-  StoryDTO,
-  UpdateStoryDTO
+  IStoryDTO,
+  IUpdateStoryDTO
 } from '../../interfaces/story';
+import { AppError } from '../../utils/appError';
 
-export class getCreateStoryDTO implements CreateStoryDTO {
+export class CreateStoryDTO implements ICreateStoryDTO {
   Title: string;
   Description: string;
   AuthorUserName: string;
@@ -27,12 +28,12 @@ export class getCreateStoryDTO implements CreateStoryDTO {
       this.AuthorUserName == undefined ||
       this.AuthorName == undefined
     ) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
 
-export class getStoryDTO implements StoryDTO {
+export class StoryDTO implements IStoryDTO {
   Title: string;
   Description: string;
   AuthorUserName: string;
@@ -52,12 +53,12 @@ export class getStoryDTO implements StoryDTO {
       this.AuthorUserName == undefined ||
       this.AuthorName == undefined
     ) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
 
-export class getUpdateStoryDTO implements UpdateStoryDTO {
+export class UpdateStoryDTO implements IUpdateStoryDTO {
   Title?: string;
   Description?: string;
 
@@ -69,7 +70,7 @@ export class getUpdateStoryDTO implements UpdateStoryDTO {
   }
   dataValidate() {
     if (this.Title == undefined && this.Description == undefined) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }

@@ -1,8 +1,8 @@
-import { CreateStoryDTO, IStory, UpdateStoryDTO } from '../interfaces/story';
+import { ICreateStoryDTO, IStory, IUpdateStoryDTO } from '../interfaces/story';
 import db from '../database/db';
 
 export const createStory = async (
-  createStoryDTO: CreateStoryDTO
+  createStoryDTO: ICreateStoryDTO
 ): Promise<void> => {
   await db('Stories').insert(createStoryDTO);
 };
@@ -31,11 +31,15 @@ export const getStoriesByUserName = async (
 
 export const updateStoryById = async (
   id: number,
-  updateStoryDTO: UpdateStoryDTO
-): Promise<void> => {
-  await db('Stories').update(updateStoryDTO).where('Id', id);
+  updateStoryDTO: IUpdateStoryDTO
+): Promise<boolean> => {
+  const isUpdated: boolean = await db('Stories')
+    .where('Id', id)
+    .update(updateStoryDTO);
+  return isUpdated;
 };
 
-export const deleteStoryById = async (id: number): Promise<void> => {
-  await db('Stories').del().where('Id', id);
+export const deleteStoryById = async (id: number): Promise<boolean> => {
+  const isDeleted: boolean = await db('Stories').where('Id', id).del();
+  return isDeleted;
 };

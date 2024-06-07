@@ -15,14 +15,12 @@ export interface ISignUpUserInputType
 export interface IUser extends Omit<IAuthAttributes, 'Password'> {}
 export interface ISignUpAuthInfoType
   extends Pick<IAuthAttributes, 'UserName' | 'Password'> {}
-export interface IAuth extends ISignUpAuthInfoType {
-  Id: number;
-}
+export interface IAuth
+  extends Pick<IAuthAttributes, 'Id' | 'UserName' | 'Password'> {}
 export interface ILogInAuthInfoType extends ISignUpAuthInfoType {}
 
-export interface SignupUserDTO
+export interface ISignUpUserDTO
   extends Omit<IAuthAttributes, 'Id' | 'Password'> {}
-export interface SignUpAuthDTO
+export interface ISignUpAuthDTO
   extends Pick<IAuthAttributes, 'UserName' | 'Password'> {}
-
-export interface LogInDTO extends ISignUpAuthInfoType {}
+export interface ILogInDTO extends ISignUpAuthInfoType {}

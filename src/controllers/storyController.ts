@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as storyService from '../services/storyService';
 import { sendResponse } from '../utils/responses';
-import { StoryDTO } from '../interfaces/story';
+import { IStoryDTO } from '../interfaces/story';
 
 export const createStory = async (
   req: Request,
@@ -10,13 +10,7 @@ export const createStory = async (
 ): Promise<void> => {
   try {
     await storyService.createStory(req.body, req.headers.authorization);
-    sendResponse<undefined>(
-      req,
-      res,
-      200,
-      undefined,
-      'Story create successful'
-    );
+    sendResponse(req, res, 200, 'Story create successful');
   } catch (err) {
     next(err);
   }
@@ -28,10 +22,10 @@ export const getStories = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const stories: StoryDTO[] = await storyService.getStories(
+    const stories: IStoryDTO[] = await storyService.getStories(
       req.query.userName as string | undefined
     );
-    sendResponse<StoryDTO[]>(req, res, 200, stories, 'All Stories');
+    sendResponse<IStoryDTO[]>(req, res, 200, 'All Stories', stories);
   } catch (err) {
     next(err);
   }
@@ -43,10 +37,10 @@ export const getStoryById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const story: StoryDTO = await storyService.getStoryById(
+    const story: IStoryDTO = await storyService.getStoryById(
       Number(req.params.id)
     );
-    sendResponse<StoryDTO>(req, res, 200, story, 'Got the story');
+    sendResponse<IStoryDTO>(req, res, 200, 'Got the story', story);
   } catch (err) {
     next(err);
   }
@@ -59,7 +53,7 @@ export const updateStoryById = async (
 ): Promise<void> => {
   try {
     await storyService.updateStoryById(Number(req.params.id), req.body);
-    sendResponse<undefined>(req, res, 200, undefined, 'Updated');
+    sendResponse(req, res, 200, 'Updated');
   } catch (err) {
     next(err);
   }
@@ -72,7 +66,7 @@ export const deleteStoryById = async (
 ): Promise<void> => {
   try {
     await storyService.deleteStoryById(Number(req.params.id));
-    sendResponse<undefined>(req, res, 200, undefined, 'Deleted');
+    sendResponse(req, res, 200, 'Deleted');
   } catch (err) {
     next(err);
   }

@@ -4,7 +4,10 @@ import { jsonToPlainText, Options } from 'json-to-plain-text';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const json2html = require('json2html');
 
-function negotiateContent(type: string | undefined, data: object) {
+function negotiateContent<T>(
+  type: string | undefined,
+  data: { message: string; data?: T }
+) {
   switch (type) {
     case 'application/xml':
       return js2xml(data, { compact: true, ignoreComment: true, spaces: 4 });
@@ -29,12 +32,12 @@ export const sendResponse = <T>(
   req: Request,
   res: Response,
   statusCode: number,
-  data: T,
-  message: string
+  message: string,
+  data?: T
 ) => {
   const response = negotiateContent(req.headers.accept, {
-    data: data,
-    message: message
+    message: message,
+    data: data
   });
 
   res.set('content-type', req.headers.accept);

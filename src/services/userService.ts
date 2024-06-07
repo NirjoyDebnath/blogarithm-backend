@@ -1,28 +1,31 @@
 import {
   IUser,
-  UserDTO,
-  IUpdateNameInput,
-  UpdateNameDTO
+  IUserDTO,
+  IUpdateUserInput,
+  IUpdateUserDTO
 } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/jwtHelper';
 import { ITokenInfo } from '../interfaces/token';
-import { getAllUsersDTO, getUpdateNameDTO, getUserDTO } from './DTOs/userDTO';
+import { UpdateUserDTO, UserDTO } from './DTOs/userDTO';
 import { Role } from '../interfaces/user';
-import { appError } from '../utils/appError';
+import { AppError } from '../utils/appError';
 
-export const getAllUsers = async (): Promise<UserDTO[]> => {
+export const getAllUsers = async (): Promise<IUserDTO[]> => {
   const users: IUser[] = await userRepository.getAllUsers();
-  const usersDTO: getAllUsersDTO = new getAllUsersDTO(users);
-  return usersDTO.users;
+  const usersDTO: IUserDTO[] = [];
+  users.forEach((user) => {
+    usersDTO.push(new UserDTO(user));
+  });
+  return usersDTO;
 };
 
-export const getUserById = async (id: number): Promise<UserDTO> => {
+export const getUserById = async (id: number): Promise<IUserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
   if (!user) {
-    throw new Error('No user found');
+    throw new AppError(404, 'No user found');
   }
-  const userDTO: UserDTO = new getUserDTO(user);
+  const userDTO: IUserDTO = new UserDTO(user);
   return userDTO;
 };
 
@@ -33,7 +36,7 @@ export const deleteUserById = async (
   const tokenInfo: ITokenInfo = await verifyToken(token);
   const user = await userRepository.getUserById(id);
   if (!user) {
-    throw new appError(404, 'No such user');
+    throw new AppError(404, 'No such user');
   }
   if (tokenInfo.role === Role.admin) {
     await userRepository.deleteUserByUserName(user.UserName);
@@ -41,37 +44,37 @@ export const deleteUserById = async (
     if (tokenInfo.userName === user.UserName) {
       await userRepository.deleteUserByUserName(user.UserName);
     } else {
-      throw new appError(400, 'You are not authorised.');
+      throw new AppError(401, 'You are not authorised.');
     }
   }
 };
 
-export const updateNameById = async (
+export const updateUserById = async (
   id: number,
   token: string | undefined,
-  newUserName: IUpdateNameInput
+  updateUserInfo: IUpdateUserInput
 ): Promise<boolean> => {
-  const updateNameDTO: UpdateNameDTO = new getUpdateNameDTO(newUserName);
+  const updateUserDTO: IUpdateUserDTO = new UpdateUserDTO(updateUserInfo);
   const tokenInfo: ITokenInfo = await verifyToken(token);
   const user = await userRepository.getUserById(id);
   if (!user) {
-    throw new appError(404, 'No such user');
+    throw new AppError(404, 'No such user');
   }
   if (tokenInfo.role === Role.admin) {
-    const isUpdated: boolean = await userRepository.updateNameById(
+    const isUpdated: boolean = await userRepository.updateUserById(
       user.Id,
-      updateNameDTO.Name
+      updateUserDTO
     );
     return isUpdated;
   } else {
     if (tokenInfo.userName === user.UserName) {
-      const isUpdated: boolean = await userRepository.updateNameByUserName(
-        user.UserName,
-        updateNameDTO.Name
+      const isUpdated: boolean = await userRepository.updateUserById(
+        user.Id,
+        updateUserDTO
       );
       return isUpdated;
     } else {
-      throw new appError(400, 'You are not authorised.');
+      throw new AppError(401, 'You are not authorised.');
     }
   }
 };

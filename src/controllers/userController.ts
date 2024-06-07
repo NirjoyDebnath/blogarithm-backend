@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 import { sendResponse } from '../utils/responses';
-import { UserDTO } from '../interfaces/user';
+import { IUserDTO } from '../interfaces/user';
 
 export const getAllUsers = async (
   req: Request,
@@ -9,8 +9,8 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const users: UserDTO[] = await userService.getAllUsers();
-    sendResponse<UserDTO[]>(req, res, 200, users, 'Got the users');
+    const usersDTO: IUserDTO[] = await userService.getAllUsers();
+    sendResponse<IUserDTO[]>(req, res, 200, 'Got the users', usersDTO);
   } catch (err) {
     next(err);
   }
@@ -22,8 +22,10 @@ export const getUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const user: UserDTO = await userService.getUserById(Number(req.params.id));
-    sendResponse<UserDTO>(req, res, 200, user, 'Got the users');
+    const userDTO: IUserDTO = await userService.getUserById(
+      Number(req.params.id)
+    );
+    sendResponse<IUserDTO>(req, res, 200, 'Got the user', userDTO);
   } catch (err) {
     next(err);
   }
@@ -39,24 +41,24 @@ export const deleteUserById = async (
       Number(req.params.id),
       req.headers.authorization
     );
-    sendResponse<undefined>(req, res, 200, undefined, 'User deleted');
+    sendResponse(req, res, 200, 'User deleted');
   } catch (err) {
     next(err);
   }
 };
 
-export const updateNameById = async (
+export const updateUserById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updateNameById(
+    await userService.updateUserById(
       Number(req.params.id),
       req.headers.authorization,
       req.body
     );
-    sendResponse<undefined>(req, res, 200, undefined, 'User Updated');
+    sendResponse(req, res, 200, 'User Updated');
   } catch (err) {
     next(err);
   }

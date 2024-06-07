@@ -1,40 +1,36 @@
 import {
   ISignUpUserInputType,
-  LogInDTO,
-  SignUpAuthDTO,
-  SignupUserDTO
+  ILogInDTO,
+  ISignUpAuthDTO,
+  ISignUpUserDTO
 } from '../interfaces/auth';
 import { IAuth } from '../interfaces/auth';
 import { ILogInAuthInfoType } from '../interfaces/auth';
 import * as authRepository from '../repositories/authRepository';
-import { hash } from '../utils/authHelper';
+import { getHash } from '../utils/authHelper';
 import { isHashMatched } from '../utils/authHelper';
 import { getUserByUserName } from '../repositories/userRepository';
-import {
-  getLogInDTO,
-  getSignupAuthDTO,
-  getSignupUserDTO
-} from './DTOs/authDTO';
+import { LogInDTO, SignUpAuthDTO, SignUpUserDTO } from './DTOs/authDTO';
 import { getToken } from '../utils/jwtHelper';
-import { appError } from '../utils/appError';
+import { AppError } from '../utils/appError';
 
 export const signUp = async (
   signUpUserInput: ISignUpUserInputType
 ): Promise<void> => {
-  const signUpUserDTO: SignupUserDTO = new getSignupUserDTO(signUpUserInput);
-  const signUpAuthDTO: SignUpAuthDTO = new getSignupAuthDTO(signUpUserInput);
-  signUpAuthDTO.Password = await hash(signUpUserInput.Password);
+  const signUpUserDTO: ISignUpUserDTO = new SignUpUserDTO(signUpUserInput);
+  const signUpAuthDTO: ISignUpAuthDTO = new SignUpAuthDTO(signUpUserInput);
+  signUpAuthDTO.Password = await getHash(signUpUserInput.Password);
   await authRepository.signUp(signUpUserDTO, signUpAuthDTO);
 };
 
 export const logIn = async (
   logInUserInput: ILogInAuthInfoType
 ): Promise<string> => {
-  const logInDTO: LogInDTO = new getLogInDTO(logInUserInput);
+  const logInDTO: ILogInDTO = new LogInDTO(logInUserInput);
   const auth: IAuth | undefined = await authRepository.logIn(logInDTO);
 
   if (!auth) {
-    throw new appError(400, 'Invalid username');
+    throw new AppError(400, 'Invalid username');
   } else {
     const { UserName, Password } = auth;
     const passwordMatched: boolean = await isHashMatched(
@@ -45,13 +41,13 @@ export const logIn = async (
       const user = await getUserByUserName(UserName);
 
       if (!user) {
-        throw new appError(400, 'Unexpected error');
+        throw new AppError(400, 'Unexpected error');
       }
 
       const token: string = await getToken(user);
       return token;
     } else {
-      throw new appError(401, 'Incorrect password');
+      throw new AppError(401, 'Incorrect password');
     }
   }
 };

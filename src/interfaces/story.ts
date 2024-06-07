@@ -15,9 +15,9 @@ export interface IUpdateStoryInput {
   Description?: string;
 }
 
-export interface CreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
-export interface StoryDTO extends Omit<IStoryAttributes, 'Id'> {}
-export interface UpdateStoryDTO {
+export interface ICreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
+export interface IStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
+export interface IUpdateStoryDTO {
   Title?: string;
   Description?: string;
 }

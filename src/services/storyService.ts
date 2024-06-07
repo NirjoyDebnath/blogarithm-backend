@@ -1,20 +1,17 @@
 import {
-  CreateStoryDTO,
+  ICreateStoryDTO,
   ICreateStoryInfo,
   ICreateStoryInput,
   IStory,
   IUpdateStoryInput,
-  StoryDTO,
-  UpdateStoryDTO
+  IStoryDTO,
+  IUpdateStoryDTO
 } from '../interfaces/story';
-import {
-  getCreateStoryDTO,
-  getStoryDTO,
-  getUpdateStoryDTO
-} from './DTOs/storyDTO';
+import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
 import { ITokenInfo } from '../interfaces/token';
-import { verifyToken } from '../utils/helper';
+import { verifyToken } from '../utils/jwtHelper';
+import { AppError } from '../utils/appError';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -27,30 +24,30 @@ export const createStory = async (
     AuthorUserName: userName,
     ...createStoryInput
   };
-  const createStoryDTO: CreateStoryDTO = new getCreateStoryDTO(createStoryInfo);
+  const createStoryDTO: ICreateStoryDTO = new CreateStoryDTO(createStoryInfo);
   await storyRepository.createStory(createStoryDTO);
 };
 
 export const getStories = async (
   userName: string | undefined
-): Promise<StoryDTO[]> => {
+): Promise<IStoryDTO[]> => {
   const stories: IStory[] = userName
     ? await storyRepository.getStoriesByUserName(userName)
     : await storyRepository.getAllStories();
 
   const storyDTO: StoryDTO[] = [];
   stories.forEach((story) => {
-    storyDTO.push(new getStoryDTO(story));
+    storyDTO.push(new StoryDTO(story));
   });
   return storyDTO;
 };
 
-export const getStoryById = async (id: number): Promise<StoryDTO> => {
+export const getStoryById = async (id: number): Promise<IStoryDTO> => {
   const story: IStory | undefined = await storyRepository.getStoryById(id);
   if (!story) {
-    throw new Error('No such story');
+    throw new AppError(404, 'No such story');
   }
-  const storyDTO: StoryDTO = new getStoryDTO(story);
+  const storyDTO: IStoryDTO = new StoryDTO(story);
   return storyDTO;
 };
 
@@ -58,22 +55,19 @@ export const updateStoryById = async (
   id: number,
   updateStoryInput: IUpdateStoryInput
 ): Promise<void> => {
-  const story: IStory | undefined = await storyRepository.getStoryById(id);
-  if (!story) {
-    // cheking like this is temporary
-    throw new Error('No such story');
-  }
-  const updateStoryDTO: UpdateStoryDTO = new getUpdateStoryDTO(
-    updateStoryInput
+  const updateStoryDTO: IUpdateStoryDTO = new UpdateStoryDTO(updateStoryInput);
+  const isUpdated: boolean = await storyRepository.updateStoryById(
+    id,
+    updateStoryDTO
   );
-  await storyRepository.updateStoryById(id, updateStoryDTO);
+  if (isUpdated == false) {
+    throw new AppError(404, 'No such sroty');
+  }
 };
 
 export const deleteStoryById = async (id: number): Promise<void> => {
-  const story: IStory | undefined = await storyRepository.getStoryById(id);
-  if (!story) {
-    // cheking like this is temporary
-    throw new Error('No such story');
+  const isDeleted: boolean = await storyRepository.deleteStoryById(id);
+  if (isDeleted == false) {
+    throw new AppError(404, 'No such sroty');
   }
-  await storyRepository.deleteStoryById(id);
 };

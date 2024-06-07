@@ -3,8 +3,10 @@ import * as storyController from './../controllers/storyController';
 
 const router: Router = Router();
 
-router.route('/createStory').post(storyController.createStory);
-router.route('/').get(storyController.getStories);
+router
+  .route('/')
+  .get(storyController.getStories)
+  .post(storyController.createStory);
 router
   .route('/:id')
   .get(storyController.getStoryById)

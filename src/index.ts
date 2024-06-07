@@ -3,7 +3,7 @@ import userRouter from './routes/userRoute';
 import authRouter from './routes/authRoute';
 import storyRouter from './routes/storyRoute';
 import { ENV } from './config/conf';
-import { globalErrorHandler } from './utils/errorHandler';
+import { handleGlobalError } from './utils/errorHandler';
 
 const app = express();
 const port = ENV.Port || 3000;
@@ -17,7 +17,7 @@ app.use('/api/story', storyRouter.router);
 //   res.status(500).json({ message: err.message, error: err });
 // });
 
-app.use(globalErrorHandler);
+app.use(handleGlobalError);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
