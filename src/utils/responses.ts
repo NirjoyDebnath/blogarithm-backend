@@ -4,23 +4,24 @@ import { jsonToPlainText, Options } from 'json-to-plain-text';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const json2html = require('json2html');
 
-function contentNegotiation(type: string | undefined, data: object) {
-  if (type === 'application/xml') {
-    return js2xml(data, { compact: true, ignoreComment: true, spaces: 4 });
-  } else if (type === 'text/html') {
-    return json2html.render(data);
-  } else if (type === 'text/plain') {
-    const options: Options = {
-      color: false,
-      spacing: true,
-      seperator: ':',
-      squareBracketsForArray: true,
-      doubleQuotesForKeys: false,
-      doubleQuotesForValues: false
-    };
-    return jsonToPlainText(data, options);
-  } else {
-    return JSON.stringify(data);
+function negotiateContent(type: string | undefined, data: object) {
+  switch (type) {
+    case 'application/xml':
+      return js2xml(data, { compact: true, ignoreComment: true, spaces: 4 });
+    case 'text/html':
+      return json2html.render(data);
+    case 'text/plain':
+      const options: Options = {
+        color: false,
+        spacing: true,
+        seperator: ':',
+        squareBracketsForArray: true,
+        doubleQuotesForKeys: false,
+        doubleQuotesForValues: false
+      };
+      return jsonToPlainText(data, options);
+    default:
+      return JSON.stringify(data);
   }
 }
 
@@ -31,7 +32,7 @@ export const sendResponse = <T>(
   data: T,
   message: string
 ) => {
-  const response = contentNegotiation(req.headers.accept, {
+  const response = negotiateContent(req.headers.accept, {
     data: data,
     message: message
   });
