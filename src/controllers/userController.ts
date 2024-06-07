@@ -41,7 +41,6 @@ export const deleteUserById = async (
     );
     sendResponse<undefined>(req, res, 200, undefined, 'User deleted');
   } catch (err) {
-    console.log('User delete hoy nai');
     next(err);
   }
 };
@@ -59,7 +58,6 @@ export const updateNameById = async (
     );
     sendResponse<undefined>(req, res, 200, undefined, 'User Updated');
   } catch (err) {
-    console.log('User update hoy nai');
     next(err);
   }
 };
