@@ -9,7 +9,7 @@ export class appError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
-    this.status = 'Fail';
+    if (statusCode >= 400 && statusCode < 500) this.status = 'Fail';
     this.name = code || this.name;
   }
 }
