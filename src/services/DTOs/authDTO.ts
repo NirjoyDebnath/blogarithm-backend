@@ -5,7 +5,7 @@ import {
   LogInDTO,
   ILogInAuthInfoType
 } from '../../interfaces/auth';
-import { IRole } from '../../interfaces/user';
+import { Role } from '../../interfaces/user';
 
 export class getSignupUserDTO implements SignupUserDTO {
   UserName: string;
@@ -18,7 +18,7 @@ export class getSignupUserDTO implements SignupUserDTO {
     this.UserName = signUpUserInput.UserName;
     this.Email = signUpUserInput.Email;
     this.Name = signUpUserInput.Name;
-    this.Role = IRole.user;
+    this.Role = Role.user;
     this.JoinDate = new Date();
   }
   dataValidate() {

@@ -20,7 +20,7 @@ export const getAllUsers = async (): Promise<UserDTO[]> => {
 export const getUserById = async (id: number): Promise<UserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
   if (!user) {
-    throw new Error('No user found');
+    throw new appError(404, 'No user found');
   }
   const userDTO: UserDTO = new getUserDTO(user);
   return userDTO;
