@@ -36,10 +36,10 @@ export class UpdateUserDTO implements IUpdateUserDTO {
   Email?: string;
   Name?: string;
 
-  constructor(newUserName: IUpdateUserInput) {
-    this.UserName = newUserName.UserName;
-    this.Email = newUserName.Email;
-    this.Name = newUserName.Name;
+  constructor(newUser: IUpdateUserInput) {
+    this.UserName = newUser.UserName;
+    this.Email = newUser.Email;
+    this.Name = newUser.Name;
     this.dataValidate();
   }
   dataValidate() {

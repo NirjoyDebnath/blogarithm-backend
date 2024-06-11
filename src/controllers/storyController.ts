@@ -2,14 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import * as storyService from '../services/storyService';
 import { sendResponse } from '../utils/responses';
 import { IStoryDTO } from '../interfaces/story';
+import { StoryDataRequest } from '../interfaces/auth';
 
 export const createStory = async (
-  req: Request,
+  req: StoryDataRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    await storyService.createStory(req.body, req.headers.authorization);
+    await storyService.createStory(req.body, req.tokenInfo!);
     sendResponse(req, res, 200, 'Story create successful');
   } catch (err) {
     next(err);

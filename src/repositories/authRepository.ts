@@ -7,7 +7,6 @@ import {
 import { IUser } from '../interfaces/auth';
 import db from '../database/db';
 import { Knex } from 'knex';
-import { AppError } from '../utils/appError';
 
 export const signUp = async (
   userInfo: ISignUpUserInfoType,
@@ -24,11 +23,7 @@ export const signUp = async (
     return user;
   } catch (err) {
     await trx.rollback();
-    throw new AppError(
-      401,
-      (err as AppError).sqlMessage || (err as AppError).message,
-      (err as AppError).code
-    );
+    throw err;
   }
 };
 

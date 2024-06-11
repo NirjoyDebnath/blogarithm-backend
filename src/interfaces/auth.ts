@@ -1,3 +1,5 @@
+import { Request } from 'express';
+import { IStory } from './story';
 interface IAuthAttributes {
   Id: number;
   UserName: string;
@@ -6,6 +8,14 @@ interface IAuthAttributes {
   Name: string;
   JoinDate: Date;
   Role: number;
+}
+
+interface IToken {
+  userName: string;
+  name: string;
+  role: number;
+  iat: number;
+  exp: number;
 }
 
 export interface ISignUpUserInfoType
@@ -24,3 +34,20 @@ export interface ISignUpUserDTO
 export interface ISignUpAuthDTO
   extends Pick<IAuthAttributes, 'UserName' | 'Password'> {}
 export interface ILogInDTO extends ISignUpAuthInfoType {}
+
+export interface ITokenInfo extends IToken {}
+export interface IPayload extends Pick<IToken, 'userName' | 'name' | 'role'> {}
+
+export interface AuthRequest extends Request {
+  tokenInfo?: ITokenInfo;
+}
+
+export interface UserDataRequest extends Request {
+  user?: IUser;
+  tokenInfo?: ITokenInfo;
+}
+
+export interface StoryDataRequest extends Request {
+  story?: IStory;
+  tokenInfo?: ITokenInfo;
+}

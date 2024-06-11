@@ -5,10 +5,7 @@ import {
   IUpdateUserDTO
 } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
-import { verifyToken } from '../utils/jwtHelper';
-import { ITokenInfo } from '../interfaces/token';
 import { UpdateUserDTO, UserDTO } from './DTOs/userDTO';
-import { Role } from '../interfaces/user';
 import { AppError } from '../utils/appError';
 
 export const getAllUsers = async (): Promise<IUserDTO[]> => {
@@ -29,52 +26,25 @@ export const getUserById = async (id: number): Promise<IUserDTO> => {
   return userDTO;
 };
 
-export const deleteUserById = async (
-  id: number,
-  token: string | undefined
-): Promise<void> => {
-  const tokenInfo: ITokenInfo = await verifyToken(token);
-  const user = await userRepository.getUserById(id);
-  if (!user) {
-    throw new AppError(404, 'No such user');
-  }
-  if (tokenInfo.role === Role.admin) {
-    await userRepository.deleteUserByUserName(user.UserName);
-  } else {
-    if (tokenInfo.userName === user.UserName) {
-      await userRepository.deleteUserByUserName(user.UserName);
-    } else {
-      throw new AppError(401, 'You are not authorised.');
-    }
-  }
+export const deleteUserByUserName = async (user: IUser): Promise<void> => {
+  await userRepository.deleteUserByUserName(user.UserName);
 };
 
 export const updateUserById = async (
   id: number,
-  token: string | undefined,
   updateUserInfo: IUpdateUserInput
-): Promise<boolean> => {
+): Promise<void> => {
   const updateUserDTO: IUpdateUserDTO = new UpdateUserDTO(updateUserInfo);
-  const tokenInfo: ITokenInfo = await verifyToken(token);
-  const user = await userRepository.getUserById(id);
-  if (!user) {
-    throw new AppError(404, 'No such user');
-  }
-  if (tokenInfo.role === Role.admin) {
-    const isUpdated: boolean = await userRepository.updateUserById(
-      user.Id,
-      updateUserDTO
-    );
-    return isUpdated;
-  } else {
-    if (tokenInfo.userName === user.UserName) {
-      const isUpdated: boolean = await userRepository.updateUserById(
-        user.Id,
-        updateUserDTO
-      );
-      return isUpdated;
-    } else {
-      throw new AppError(401, 'You are not authorised.');
-    }
+  const isUpdated: boolean = await userRepository.updateUserById(
+    id,
+    updateUserDTO
+  );
+  if (!isUpdated) {
+    // throw new AppError(
+    //   401,
+    //   (err as AppError).sqlMessage || (err as AppError).message,
+    //   (err as AppError).code
+    // );
+    throw new AppError(500, 'Something went wrongg.');
   }
 };
