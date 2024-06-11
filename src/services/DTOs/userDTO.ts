@@ -1,34 +1,12 @@
-import { IUpdateNameInput, IUser, UpdateNameDTO } from '../../interfaces/user';
-import { UserDTO } from '../../interfaces/user';
+import {
+  IUser,
+  IUpdateUserDTO,
+  IUserDTO,
+  IUpdateUserInput
+} from '../../interfaces/user';
+import { AppError } from '../../utils/appError';
 
-export class getAllUsersDTO {
-  users: UserDTO[] = [];
-
-  constructor(users: IUser[]) {
-    for (const data in users) {
-      const Id = users[data].Id;
-      const UserName = users[data].UserName;
-      const Name = users[data].Name;
-      const Email = users[data].Email;
-      this.users.push({ Id, UserName, Name, Email });
-    }
-    this.dataValidate();
-  }
-  dataValidate() {
-    for (const data in this.users) {
-      if (
-        this.users[data].Id == undefined ||
-        this.users[data].UserName == undefined ||
-        this.users[data].Name == undefined ||
-        this.users[data].Email == undefined
-      ) {
-        throw new Error('Data missing');
-      }
-    }
-  }
-}
-
-export class getUserDTO implements UserDTO {
+export class UserDTO implements IUserDTO {
   Id: number;
   UserName: string;
   Name: string;
@@ -48,21 +26,29 @@ export class getUserDTO implements UserDTO {
       this.Name == undefined ||
       this.Email == undefined
     ) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
 
-export class getUpdateNameDTO implements UpdateNameDTO {
-  Name: string;
+export class UpdateUserDTO implements IUpdateUserDTO {
+  UserName?: string;
+  Email?: string;
+  Name?: string;
 
-  constructor(newUserName: IUpdateNameInput) {
+  constructor(newUserName: IUpdateUserInput) {
+    this.UserName = newUserName.UserName;
+    this.Email = newUserName.Email;
     this.Name = newUserName.Name;
     this.dataValidate();
   }
   dataValidate() {
-    if (this.Name == undefined) {
-      throw new Error('Data missing');
+    if (
+      this.UserName == undefined &&
+      this.Email == undefined &&
+      this.Name == undefined
+    ) {
+      throw new AppError(400, 'Data missing');
     }
   }
 }

@@ -1,4 +1,4 @@
-import { IUser } from '../interfaces/user';
+import { IUpdateUserDTO, IUser } from '../interfaces/user';
 import db from '../database/db';
 
 export const getAllUsers = async (): Promise<IUser[]> => {
@@ -40,22 +40,12 @@ export const deleteUserByUserName = async (
   }
 };
 
-export const updateNameById = async (
+export const updateUserById = async (
   id: number,
-  newUserName: string
+  updateUserDTO: IUpdateUserDTO
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('users')
     .where('Id', id)
-    .update({ Name: newUserName });
-  return isUpdated;
-};
-
-export const updateNameByUserName = async (
-  userName: string,
-  newUserName: string
-): Promise<boolean> => {
-  const isUpdated: boolean = await db('users')
-    .where('UserName', userName)
-    .update({ Name: newUserName });
+    .update(updateUserDTO);
   return isUpdated;
 };

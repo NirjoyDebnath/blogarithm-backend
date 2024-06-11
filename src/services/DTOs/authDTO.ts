@@ -1,13 +1,14 @@
 import {
   ISignUpUserInputType,
-  SignupUserDTO,
-  SignUpAuthDTO,
-  LogInDTO,
+  ISignUpUserDTO,
+  ISignUpAuthDTO,
+  ILogInDTO,
   ILogInAuthInfoType
 } from '../../interfaces/auth';
-import { IRole } from '../../interfaces/user';
+import { Role } from '../../interfaces/user';
+import { AppError } from '../../utils/appError';
 
-export class getSignupUserDTO implements SignupUserDTO {
+export class SignUpUserDTO implements ISignUpUserDTO {
   UserName: string;
   Email: string;
   Name: string;
@@ -18,7 +19,7 @@ export class getSignupUserDTO implements SignupUserDTO {
     this.UserName = signUpUserInput.UserName;
     this.Email = signUpUserInput.Email;
     this.Name = signUpUserInput.Name;
-    this.Role = IRole.user;
+    this.Role = Role.user;
     this.JoinDate = new Date();
   }
   dataValidate() {
@@ -27,12 +28,12 @@ export class getSignupUserDTO implements SignupUserDTO {
       this.Email == undefined ||
       this.Name == undefined
     ) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
 
-export class getSignupAuthDTO implements SignUpAuthDTO {
+export class SignUpAuthDTO implements ISignUpAuthDTO {
   UserName: string;
   Password: string;
 
@@ -42,12 +43,12 @@ export class getSignupAuthDTO implements SignUpAuthDTO {
   }
   dataValidate() {
     if (this.UserName == undefined || this.Password == undefined) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
 
-export class getLogInDTO implements LogInDTO {
+export class LogInDTO implements ILogInDTO {
   UserName: string;
   Password: string;
 
@@ -57,7 +58,7 @@ export class getLogInDTO implements LogInDTO {
   }
   dataValidate() {
     if (this.UserName == undefined || this.Password == undefined) {
-      throw new Error('Data missing');
+      throw new AppError(400, 'Data missing');
     }
   }
 }
