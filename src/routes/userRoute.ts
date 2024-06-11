@@ -10,6 +10,6 @@ router
   .route('/:id')
   .get(userController.getUserById)
   .delete(userMiddleware.userProtect, userController.deleteUserById)
-  .patch(userController.updateNameById);
+  .patch(userMiddleware.userProtect, userController.updateNameById);
 
 export default { router };

@@ -43,6 +43,7 @@ export const globalErrorHandler = (
         err.status = 'error';
     }
   }
+  console.log(err.stack);
   res
     .status(err.statusCode)
     .json({ status: err.status, message: err.message, name: err.name });
