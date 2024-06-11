@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { IUser } from '../interfaces/user';
-import { appError } from '../utils/appError';
+import { AppError } from '../utils/appError';
 import { ENV } from '../config/conf';
 import jwt from 'jsonwebtoken';
 import { ITokenInfo } from '../interfaces/token';
@@ -17,13 +17,13 @@ export const userProtect = async (
     const token: string | undefined = req.headers.authorization?.split(' ')[1];
     const id: number = Number(req.params.id);
     if (!token) {
-      return next(new appError(401, 'User not logged in'));
+      return next(new AppError(401, 'User not logged in'));
     }
     if (!id) {
-      return next(new appError(400, 'Bad Request'));
+      return next(new AppError(400, 'Bad Request'));
     }
     if (ENV.SecretKey === undefined) {
-      return next(new appError(500, 'Something went wrong'));
+      return next(new AppError(500, 'Something went wrong'));
     }
     const tokenInfo: ITokenInfo = jwt.verify(
       token,
@@ -31,9 +31,9 @@ export const userProtect = async (
     ) as ITokenInfo;
     const user: IUser | undefined = await getUserById(id);
     if (user === undefined) {
-      return next(new appError(404, 'No user found'));
+      return next(new AppError(404, 'No user found'));
     } else if (user.UserName !== tokenInfo.userName) {
-      return next(new appError(401, 'You are not authorised.'));
+      return next(new AppError(401, 'You are not authorised.'));
     }
     req.user = user;
     next();

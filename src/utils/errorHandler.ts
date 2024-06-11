@@ -1,16 +1,16 @@
-import { appError } from './appError';
+import { AppError } from './appError';
 import { Request, Response, NextFunction } from 'express';
 
-const tokenExpireError: appError = new appError(
+const tokenExpireError: AppError = new AppError(
   401,
   'Your session has been expired.'
 );
-const jsonWebTokenError: appError = new appError(
+const jsonWebTokenError: AppError = new AppError(
   401,
   'You are not authorised.'
 );
 
-const messageParser = (errorName: string, errorMessage: string): string => {
+const parseMessage = (errorName: string, errorMessage: string): string => {
   switch (errorName) {
     case 'ER_DUP_ENTRY':
       const message: string = errorMessage;
@@ -21,8 +21,8 @@ const messageParser = (errorName: string, errorMessage: string): string => {
   return errorMessage;
 };
 
-export const globalErrorHandler = (
-  err: appError,
+export const handleGlobalError = (
+  err: AppError,
   req: Request,
   res: Response,
   _next: NextFunction
@@ -43,6 +43,8 @@ export const globalErrorHandler = (
         err.status = 'error';
     }
   }
+  parseMessage(err.name, err.message);
+  // eslint-disable-next-line no-console
   console.log(err.stack);
   res
     .status(err.statusCode)
