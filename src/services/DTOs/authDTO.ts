@@ -3,7 +3,9 @@ import {
   ISignUpUserDTO,
   ISignUpAuthDTO,
   ILogInDTO,
-  ILogInAuthInfoType
+  IUpdatePasswordUserInputDTO,
+  IUpdatePasswordUserInput,
+  ILogInAuthInputType
 } from '../../interfaces/auth';
 import { Role } from '../../interfaces/user';
 import { AppError } from '../../utils/appError';
@@ -21,6 +23,7 @@ export class SignUpUserDTO implements ISignUpUserDTO {
     this.Name = signUpUserInput.Name;
     this.Role = Role.user;
     this.JoinDate = new Date();
+    this.dataValidate();
   }
   dataValidate() {
     if (
@@ -36,10 +39,13 @@ export class SignUpUserDTO implements ISignUpUserDTO {
 export class SignUpAuthDTO implements ISignUpAuthDTO {
   UserName: string;
   Password: string;
+  PasswordModifiedAt: Date;
 
   constructor(signUpUserInput: ISignUpUserInputType) {
     this.UserName = signUpUserInput.UserName;
     this.Password = signUpUserInput.Password;
+    this.PasswordModifiedAt = new Date();
+    this.dataValidate();
   }
   dataValidate() {
     if (this.UserName == undefined || this.Password == undefined) {
@@ -52,12 +58,29 @@ export class LogInDTO implements ILogInDTO {
   UserName: string;
   Password: string;
 
-  constructor(logInUserInput: ILogInAuthInfoType) {
+  constructor(logInUserInput: ILogInAuthInputType) {
     this.UserName = logInUserInput.UserName;
     this.Password = logInUserInput.Password;
+    this.dataValidate();
   }
   dataValidate() {
     if (this.UserName == undefined || this.Password == undefined) {
+      throw new AppError(400, 'Data missing');
+    }
+  }
+}
+
+export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
+  CurrentPassword: string;
+  NewPassword: string;
+
+  constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
+    this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
+    this.NewPassword = updatePasswordUserInput.NewPassword;
+    this.dataValidate();
+  }
+  dataValidate() {
+    if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
       throw new AppError(400, 'Data missing');
     }
   }

@@ -24,12 +24,12 @@ const isAuthorizedWithUserName = async (
 };
 
 export const authorizedForUpdate = async (
-  req: UserDataRequest,
+  req: StoryDataRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (req.user?.Role === Role.user) {
+    if (req.tokenInfo?.role === Role.user) {
       const authorizedWithUserName: boolean =
         await isAuthorizedWithUserName(req);
       if (!authorizedWithUserName) {
@@ -48,7 +48,7 @@ export const authorizedForDelete = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (req.user?.Role === Role.user) {
+    if (req.tokenInfo?.role === Role.user) {
       const authorizedWithUserName: boolean =
         await isAuthorizedWithUserName(req);
       if (!authorizedWithUserName) {

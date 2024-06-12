@@ -47,6 +47,7 @@ export const handleGlobalError = (
         err.message = parseMessage(err.name, err.sqlMessage!);
         err.status = 'Fail';
         break;
+      //ER_BAD_FIELD_ERROR
       default:
         err.statusCode = 500;
         err.message = 'Something went wrong';

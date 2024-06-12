@@ -40,11 +40,6 @@ export const updateUserById = async (
     updateUserDTO
   );
   if (!isUpdated) {
-    // throw new AppError(
-    //   401,
-    //   (err as AppError).sqlMessage || (err as AppError).message,
-    //   (err as AppError).code
-    // );
     throw new AppError(500, 'Something went wrongg.');
   }
 };

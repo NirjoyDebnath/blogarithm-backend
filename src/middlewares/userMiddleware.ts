@@ -45,7 +45,7 @@ export const authorizedForDelete = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (req.user?.Role === Role.user) {
+    if (req.tokenInfo?.role === Role.user) {
       const authorizedWithId: boolean = await isAuthorizedWithId(req);
       if (!authorizedWithId) {
         return next(new AppError(401, 'You are not authorized'));
