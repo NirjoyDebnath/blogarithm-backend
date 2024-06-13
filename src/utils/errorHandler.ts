@@ -1,5 +1,6 @@
 import { AppError } from './appError';
 import { Request, Response, NextFunction } from 'express';
+import { sendResponse } from './responses';
 
 const tokenExpireError: AppError = new AppError(
   401,
@@ -44,7 +45,5 @@ export const handleGlobalError = (
     }
   }
   parseMessage(err.name, err.message);
-  res
-    .status(err.statusCode)
-    .json({ status: err.status, message: err.message, name: err.name });
+  sendResponse(req, res, err.statusCode, err.status + ': ' + err.message);
 };

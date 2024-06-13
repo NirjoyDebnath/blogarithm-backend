@@ -35,11 +35,15 @@ export const sendResponse = <T>(
   message: string,
   data?: T
 ) => {
-  const response = negotiateContent(req.headers.accept, {
+  const contentType: string =
+    (req.headers.accept === '*/*' ? 'application/json' : req.headers.accept) ||
+    'application/json';
+
+  const response = negotiateContent(contentType, {
     message: message,
     data: data
   });
 
-  res.set('content-type', req.headers.accept);
+  res.set('content-type', contentType);
   res.status(statusCode).send(response);
 };
