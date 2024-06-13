@@ -7,8 +7,14 @@ export const createStory = async (
   await db('Stories').insert(createStoryDTO);
 };
 
-export const getAllStories = async (): Promise<IStory[]> => {
-  const stories: IStory[] = await db<IStory>('Stories').select('*');
+export const getAllStories = async (
+  storyPerPage: number,
+  offset: number
+): Promise<IStory[]> => {
+  const stories: IStory[] = await db<IStory>('Stories')
+    .select('*')
+    .limit(storyPerPage)
+    .offset(offset);
   return stories;
 };
 
@@ -21,11 +27,15 @@ export const getStoryById = async (id: number): Promise<IStory | undefined> => {
 };
 
 export const getStoriesByUserName = async (
-  AuthorUserName: string
+  AuthorUserName: string,
+  storyPerPage: number,
+  offset: number
 ): Promise<IStory[]> => {
   const stories: IStory[] = await db<IStory>('Stories')
     .select('*')
-    .where('AuthorUserName', AuthorUserName);
+    .where('AuthorUserName', AuthorUserName)
+    .limit(storyPerPage)
+    .offset(offset);
   return stories;
 };
 

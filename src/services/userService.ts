@@ -2,7 +2,8 @@ import {
   IUser,
   IUserDTO,
   IUpdateUserInput,
-  IUpdateUserDTO
+  IUpdateUserDTO,
+  IUserQueryParams
 } from '../interfaces/user';
 import * as userRepository from '../repositories/userRepository';
 import { verifyToken } from '../utils/jwtHelper';
@@ -10,9 +11,15 @@ import { ITokenInfo } from '../interfaces/token';
 import { UpdateUserDTO, UserDTO } from './DTOs/userDTO';
 import { Role } from '../interfaces/user';
 import { AppError } from '../utils/appError';
+import { ENV } from '../config/conf';
 
-export const getAllUsers = async (): Promise<IUserDTO[]> => {
-  const users: IUser[] = await userRepository.getAllUsers();
+export const getAllUsers = async (
+  userQueryParams: IUserQueryParams
+): Promise<IUserDTO[]> => {
+  const page: number = userQueryParams.page || 1;
+  const offset: number = Number(ENV.StoryPerPage) * (page - 1);
+  const storyPerPage: number = Number(ENV.StoryPerPage);
+  const users: IUser[] = await userRepository.getAllUsers(storyPerPage, offset);
   const usersDTO: IUserDTO[] = [];
   users.forEach((user) => {
     usersDTO.push(new UserDTO(user));

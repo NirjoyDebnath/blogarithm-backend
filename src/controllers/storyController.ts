@@ -22,9 +22,7 @@ export const getStories = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const stories: IStoryDTO[] = await storyService.getStories(
-      req.query.userName as string | undefined
-    );
+    const stories: IStoryDTO[] = await storyService.getStories(req.query);
     sendResponse<IStoryDTO[]>(req, res, 200, 'All Stories', stories);
   } catch (err) {
     next(err);

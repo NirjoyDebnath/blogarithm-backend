@@ -21,3 +21,8 @@ export interface IUpdateStoryDTO {
   Title?: string;
   Description?: string;
 }
+
+export interface IStoryQueryParams {
+  AuthorUserName?: string;
+  page?: number;
+}
