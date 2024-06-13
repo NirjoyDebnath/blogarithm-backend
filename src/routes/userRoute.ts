@@ -12,12 +12,12 @@ router
   .get(userController.getUserById)
   .delete(
     authMiddleware.authenticateUser,
-    userMiddleware.authorizedForDelete,
+    userMiddleware.authorizeDeletion,
     userController.deleteUserById
   )
   .patch(
     authMiddleware.authenticateUser,
-    userMiddleware.authorizedForUpdate,
+    userMiddleware.authorizeUpdate,
     userController.updateUserById
   );
 

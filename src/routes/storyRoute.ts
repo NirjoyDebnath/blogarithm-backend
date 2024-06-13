@@ -14,12 +14,12 @@ router
   .get(storyController.getStoryById)
   .patch(
     authMiddleware.authenticateUser,
-    storyMiddleware.authorizedForUpdate,
+    storyMiddleware.authorizeUpdate,
     storyController.updateStoryById
   )
   .delete(
     authMiddleware.authenticateUser,
-    storyMiddleware.authorizedForDelete,
+    storyMiddleware.authorizeDeletion,
     storyController.deleteStoryById
   );
 

@@ -23,9 +23,9 @@ export class SignUpUserDTO implements ISignUpUserDTO {
     this.Name = signUpUserInput.Name;
     this.Role = Role.user;
     this.JoinDate = new Date();
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.UserName == undefined ||
       this.Email == undefined ||
@@ -45,9 +45,9 @@ export class SignUpAuthDTO implements ISignUpAuthDTO {
     this.UserName = signUpUserInput.UserName;
     this.Password = signUpUserInput.Password;
     this.PasswordModifiedAt = new Date();
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (this.UserName == undefined || this.Password == undefined) {
       throw new AppError(400, 'Data missing');
     }
@@ -61,9 +61,9 @@ export class LogInDTO implements ILogInDTO {
   constructor(logInUserInput: ILogInAuthInputType) {
     this.UserName = logInUserInput.UserName;
     this.Password = logInUserInput.Password;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (this.UserName == undefined || this.Password == undefined) {
       throw new AppError(400, 'Data missing');
     }
@@ -77,9 +77,9 @@ export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
   constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
     this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
     this.NewPassword = updatePasswordUserInput.NewPassword;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
       throw new AppError(400, 'Data missing');
     }

@@ -23,7 +23,7 @@ const isAuthorizedWithUserName = async (
   return true;
 };
 
-export const authorizedForUpdate = async (
+export const authorizeUpdate = async (
   req: StoryDataRequest,
   res: Response,
   next: NextFunction
@@ -42,7 +42,7 @@ export const authorizedForUpdate = async (
   }
 };
 
-export const authorizedForDelete = async (
+export const authorizeDeletion = async (
   req: UserDataRequest,
   res: Response,
   next: NextFunction

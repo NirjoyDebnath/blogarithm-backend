@@ -17,9 +17,9 @@ export class UserDTO implements IUserDTO {
     this.UserName = user.UserName;
     this.Name = user.Name;
     this.Email = user.Email;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.Id == undefined ||
       this.UserName == undefined ||
@@ -40,9 +40,9 @@ export class UpdateUserDTO implements IUpdateUserDTO {
     this.UserName = newUser.UserName;
     this.Email = newUser.Email;
     this.Name = newUser.Name;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.UserName == undefined &&
       this.Email == undefined &&
