@@ -1,7 +1,7 @@
 import { IUser } from '../interfaces/user';
 import jwt from 'jsonwebtoken';
 import { ENV } from '../config/conf';
-import { IPayload, ITokenInfo } from '../interfaces/token';
+import { IPayload, ITokenInfo } from '../interfaces/auth';
 import { AppError } from './appError';
 
 export const getToken = async (user: IUser): Promise<string> => {

@@ -17,9 +17,9 @@ export class UserDTO implements IUserDTO {
     this.UserName = user.UserName;
     this.Name = user.Name;
     this.Email = user.Email;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.Id == undefined ||
       this.UserName == undefined ||
@@ -36,13 +36,13 @@ export class UpdateUserDTO implements IUpdateUserDTO {
   Email?: string;
   Name?: string;
 
-  constructor(newUserName: IUpdateUserInput) {
-    this.UserName = newUserName.UserName;
-    this.Email = newUserName.Email;
-    this.Name = newUserName.Name;
-    this.dataValidate();
+  constructor(newUser: IUpdateUserInput) {
+    this.UserName = newUser.UserName;
+    this.Email = newUser.Email;
+    this.Name = newUser.Name;
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.UserName == undefined &&
       this.Email == undefined &&

@@ -1,6 +1,6 @@
+import { ENV } from '../config/conf';
 import { AppError } from './appError';
 import { Request, Response, NextFunction } from 'express';
-import { sendResponse } from './responses';
 
 const tokenExpireError: AppError = new AppError(
   401,
@@ -28,8 +28,12 @@ export const handleGlobalError = (
   res: Response,
   _next: NextFunction
 ) => {
+  if (ENV.Environment === 'development') {
+    // eslint-disable-next-line no-console
+    console.log(err.name, err.isOperational, err);
+  }
   if (err.isOperational === undefined || false) {
-    const errorName: string = err.name;
+    const errorName: string = err.code || err.name;
 
     switch (errorName) {
       case 'TokenExpiredError':
@@ -38,12 +42,19 @@ export const handleGlobalError = (
       case 'JsonWebTokenError':
         err = jsonWebTokenError;
         break;
+      case 'ER_DUP_ENTRY':
+        err.statusCode = 400;
+        err.message = parseMessage(err.name, err.sqlMessage!);
+        err.status = 'Fail';
+        break;
+      //ER_BAD_FIELD_ERROR
       default:
         err.statusCode = 500;
         err.message = 'Something went wrong';
         err.status = 'error';
     }
   }
-  parseMessage(err.name, err.message);
-  sendResponse(req, res, err.statusCode, err.status + ': ' + err.message);
+  res
+    .status(err.statusCode)
+    .json({ status: err.status, message: err.message, name: err.name });
 };
