@@ -1,8 +1,14 @@
 import { IUpdateUserDTO, IUser } from '../interfaces/user';
 import db from '../database/db';
 
-export const getAllUsers = async (): Promise<IUser[]> => {
-  const users: IUser[] = await db<IUser>('Users').select('*');
+export const getAllUsers = async (
+  storyPerPage: number,
+  offset: number
+): Promise<IUser[]> => {
+  const users: IUser[] = await db<IUser>('Users')
+    .select('*')
+    .limit(storyPerPage)
+    .offset(offset);
   return users;
 };
 

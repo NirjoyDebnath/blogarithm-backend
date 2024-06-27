@@ -26,3 +26,7 @@ export interface IUpdateUserDTO {
   Email?: string;
   Name?: string;
 }
+
+export interface IUserQueryParams {
+  page?: number;
+}

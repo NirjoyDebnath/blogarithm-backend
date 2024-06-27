@@ -5,12 +5,14 @@ import {
   IStory,
   IUpdateStoryInput,
   IStoryDTO,
-  IUpdateStoryDTO
+  IUpdateStoryDTO,
+  IStoryQueryParams
 } from '../interfaces/story';
 import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
 import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
+import { ENV } from '../config/conf';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -27,11 +29,19 @@ export const createStory = async (
 };
 
 export const getStories = async (
-  userName: string | undefined
+  storyQueryParams: IStoryQueryParams
 ): Promise<IStoryDTO[]> => {
-  const stories: IStory[] = userName
-    ? await storyRepository.getStoriesByUserName(userName)
-    : await storyRepository.getAllStories();
+  const { AuthorUserName } = storyQueryParams;
+  const page: number = storyQueryParams.page || 1;
+  const offset: number = Number(ENV.StoryPerPage) * (page - 1);
+  const storyPerPage: number = Number(ENV.StoryPerPage);
+  const stories: IStory[] = AuthorUserName
+    ? await storyRepository.getStoriesByUserName(
+        AuthorUserName,
+        storyPerPage,
+        offset
+      )
+    : await storyRepository.getAllStories(storyPerPage, offset);
 
   const storyDTO: StoryDTO[] = [];
   stories.forEach((story) => {

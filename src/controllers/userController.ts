@@ -10,7 +10,7 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const usersDTO: IUserDTO[] = await userService.getAllUsers();
+    const usersDTO: IUserDTO[] = await userService.getAllUsers(req.params);
     sendResponse<IUserDTO[]>(req, res, 200, 'Got the users', usersDTO);
   } catch (err) {
     next(err);
