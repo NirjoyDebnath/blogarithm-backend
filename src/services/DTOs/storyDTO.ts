@@ -19,9 +19,9 @@ export class CreateStoryDTO implements ICreateStoryDTO {
     this.Description = createStoryInput.Description;
     this.AuthorUserName = createStoryInput.AuthorUserName;
     this.AuthorName = createStoryInput.AuthorName;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.Title == undefined ||
       this.Description == undefined ||
@@ -44,9 +44,9 @@ export class StoryDTO implements IStoryDTO {
     this.Description = story.Description;
     this.AuthorUserName = story.AuthorUserName;
     this.AuthorName = story.AuthorName;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (
       this.Title == undefined ||
       this.Description == undefined ||
@@ -66,9 +66,9 @@ export class UpdateStoryDTO implements IUpdateStoryDTO {
     if (updateStoryInput.Title) this.Title = updateStoryInput.Title;
     if (updateStoryInput.Description)
       this.Description = updateStoryInput.Description;
-    this.dataValidate();
+    this.validateData();
   }
-  dataValidate() {
+  validateData() {
     if (this.Title == undefined && this.Description == undefined) {
       throw new AppError(400, 'Data missing');
     }

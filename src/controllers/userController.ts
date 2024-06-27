@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 import { sendResponse } from '../utils/responses';
 import { IUserDTO } from '../interfaces/user';
+import { UserDataRequest } from '../interfaces/auth';
 
 export const getAllUsers = async (
   req: Request,
@@ -32,15 +33,12 @@ export const getUserById = async (
 };
 
 export const deleteUserById = async (
-  req: Request,
+  req: UserDataRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.deleteUserById(
-      Number(req.params.id),
-      req.headers.authorization
-    );
+    await userService.deleteUserByUserName(req.user!);
     sendResponse(req, res, 200, 'User deleted');
   } catch (err) {
     next(err);
@@ -48,16 +46,12 @@ export const deleteUserById = async (
 };
 
 export const updateUserById = async (
-  req: Request,
+  req: UserDataRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updateUserById(
-      Number(req.params.id),
-      req.headers.authorization,
-      req.body
-    );
+    await userService.updateUserById(Number(req.params.id), req.body);
     sendResponse(req, res, 200, 'User Updated');
   } catch (err) {
     next(err);

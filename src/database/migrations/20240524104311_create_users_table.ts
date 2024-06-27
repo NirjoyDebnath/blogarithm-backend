@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('UserName').notNullable().unique();
     table.string('Email').notNullable().unique();
     table.string('Name').notNullable();
-    table.date('JoinDate').notNullable();
+    table.dateTime('JoinDate').notNullable();
     table.integer('Role').notNullable();
   });
 }

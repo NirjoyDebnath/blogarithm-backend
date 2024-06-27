@@ -9,15 +9,13 @@ import {
 } from '../interfaces/story';
 import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
-import { ITokenInfo } from '../interfaces/token';
-import { verifyToken } from '../utils/jwtHelper';
+import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
-  token: string | undefined
+  tokenInfo: ITokenInfo
 ): Promise<void> => {
-  const tokenInfo: ITokenInfo = await verifyToken(token);
   const { userName, name } = tokenInfo;
   const createStoryInfo: ICreateStoryInfo = {
     AuthorName: name,
