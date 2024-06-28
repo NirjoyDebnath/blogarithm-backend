@@ -2,12 +2,12 @@ import { IUpdateUserDTO, IUser } from '../interfaces/user';
 import db from '../database/db';
 
 export const getAllUsers = async (
-  storyPerPage: number,
+  userPerPage: number,
   offset: number
 ): Promise<IUser[]> => {
   const users: IUser[] = await db<IUser>('Users')
     .select('*')
-    .limit(storyPerPage)
+    .limit(userPerPage)
     .offset(offset);
   return users;
 };

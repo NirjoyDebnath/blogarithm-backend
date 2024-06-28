@@ -18,9 +18,8 @@ export const createStory = async (
   createStoryInput: ICreateStoryInput,
   tokenInfo: ITokenInfo
 ): Promise<void> => {
-  const { userName, name } = tokenInfo;
+  const { userName } = tokenInfo;
   const createStoryInfo: ICreateStoryInfo = {
-    AuthorName: name,
     AuthorUserName: userName,
     ...createStoryInput
   };

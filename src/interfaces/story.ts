@@ -2,14 +2,14 @@ interface IStoryAttributes {
   Id: number;
   Title: string;
   Description: string;
-  AuthorName: string;
   AuthorUserName: string;
 }
 
 export interface IStory extends IStoryAttributes {}
 export interface ICreateStoryInput
   extends Pick<IStoryAttributes, 'Title' | 'Description'> {}
-export interface ICreateStoryInfo extends Omit<IStoryAttributes, 'Id'> {}
+export interface ICreateStoryInfo
+  extends Omit<IStoryAttributes, 'Id' | 'AuthorName'> {}
 export interface IUpdateStoryInput {
   Title?: string;
   Description?: string;

@@ -23,9 +23,9 @@ export const getAllUsers = async (
   userQueryParams: IUserQueryParams
 ): Promise<IUserDTO[]> => {
   const page: number = userQueryParams.page || 1;
-  const offset: number = Number(ENV.StoryPerPage) * (page - 1);
-  const storyPerPage: number = Number(ENV.StoryPerPage);
-  const users: IUser[] = await userRepository.getAllUsers(storyPerPage, offset);
+  const offset: number = Number(ENV.UserPerPage) * (page - 1);
+  const userPerPage: number = Number(ENV.UserPerPage);
+  const users: IUser[] = await userRepository.getAllUsers(userPerPage, offset);
   const usersDTO: IUserDTO[] = [];
   users.forEach((user) => {
     usersDTO.push(new UserDTO(user));
