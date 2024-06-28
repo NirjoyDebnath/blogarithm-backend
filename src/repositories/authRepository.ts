@@ -42,14 +42,3 @@ export const getAuthByUserName = async (
     .first();
   return auth;
 };
-
-export const updatePassword = async (
-  UserName: string,
-  Password: string,
-  PasswordModifiedAt: Date
-): Promise<boolean> => {
-  const isUpdated: boolean = await db('auth')
-    .where('UserName', UserName)
-    .update({ Password, PasswordModifiedAt });
-  return isUpdated;
-};

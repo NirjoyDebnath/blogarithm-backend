@@ -15,10 +15,11 @@ router
     userMiddleware.authorizeDeletion,
     userController.deleteUserById
   )
-  .patch(
+  .put(
     authMiddleware.authenticateUser,
     userMiddleware.authorizeUpdate,
     userController.updateUserById
-  );
+  )
+  .patch(authMiddleware.authenticateUser, userController.updatePassword);
 
 export default { router };
