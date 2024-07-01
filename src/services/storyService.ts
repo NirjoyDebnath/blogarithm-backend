@@ -17,7 +17,7 @@ import { ENV } from '../config/conf';
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
   tokenInfo: ITokenInfo
-): Promise<void> => {
+): Promise<ICreateStoryDTO> => {
   const { userName } = tokenInfo;
   const createStoryInfo: ICreateStoryInfo = {
     AuthorUserName: userName,
@@ -25,6 +25,7 @@ export const createStory = async (
   };
   const createStoryDTO: ICreateStoryDTO = new CreateStoryDTO(createStoryInfo);
   await storyRepository.createStory(createStoryDTO);
+  return createStoryDTO;
 };
 
 export const getStories = async (
@@ -49,7 +50,7 @@ export const getStories = async (
   return storyDTO;
 };
 
-export const getStoryById = async (id: number): Promise<IStoryDTO> => {
+export const getStoryById = async (id: string): Promise<IStoryDTO> => {
   const story: IStory | undefined = await storyRepository.getStoryById(id);
   if (!story) {
     throw new AppError(404, 'No such story');
@@ -59,7 +60,7 @@ export const getStoryById = async (id: number): Promise<IStoryDTO> => {
 };
 
 export const updateStoryById = async (
-  id: number,
+  id: string,
   updateStoryInput: IUpdateStoryInput
 ): Promise<void> => {
   const updateStoryDTO: IUpdateStoryDTO = new UpdateStoryDTO(updateStoryInput);
@@ -72,7 +73,7 @@ export const updateStoryById = async (
   }
 };
 
-export const deleteStoryById = async (id: number): Promise<void> => {
+export const deleteStoryById = async (id: string): Promise<void> => {
   const isDeleted: boolean = await storyRepository.deleteStoryById(id);
   if (isDeleted == false) {
     throw new AppError(404, 'No such sroty');

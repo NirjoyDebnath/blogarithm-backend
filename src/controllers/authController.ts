@@ -9,7 +9,7 @@ export const signUp = async (
 ): Promise<void> => {
   try {
     await authService.signUp(req.body);
-    sendResponse(req, res, 200, 'Sign up successful');
+    sendResponse(req, res, 201, 'Sign up successful');
   } catch (err) {
     next(err);
   }
@@ -21,8 +21,8 @@ export const logIn = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const logInStatus: string = await authService.logIn(req.body);
-    sendResponse<string>(req, res, 200, 'Log in successful', logInStatus);
+    const token: string = await authService.logIn(req.body);
+    sendResponse<object>(req, res, 200, 'Log in successful', { token: token });
   } catch (err) {
     next(err);
   }

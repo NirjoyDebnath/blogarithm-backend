@@ -24,9 +24,7 @@ export const getUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userDTO: IUserDTO = await userService.getUserById(
-      Number(req.params.id)
-    );
+    const userDTO: IUserDTO = await userService.getUserById(req.params.id);
     sendResponse<IUserDTO>(req, res, 200, 'Got the user', userDTO);
   } catch (err) {
     next(err);
@@ -39,7 +37,7 @@ export const deleteUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.deleteUserByUserName(req.user!);
+    await userService.deleteUserById(req.params.id, req.user!.UserName);
     sendResponse(req, res, 200, 'User deleted');
   } catch (err) {
     next(err);
@@ -52,7 +50,7 @@ export const updateUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updateUserById(Number(req.params.id), req.body);
+    await userService.updateUserById(req.params.id, req.body);
     sendResponse(req, res, 200, 'User Updated');
   } catch (err) {
     next(err);

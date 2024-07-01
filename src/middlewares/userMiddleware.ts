@@ -6,7 +6,7 @@ import { UserDataRequest } from '../interfaces/auth';
 import { Role } from '../interfaces/user';
 
 const isAuthorizedWithId = async (req: UserDataRequest): Promise<boolean> => {
-  const id: number = Number(req.params.id);
+  const id: string = req.params.id;
   if (!id) {
     throw new AppError(404, 'Bad request');
   }

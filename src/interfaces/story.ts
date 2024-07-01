@@ -1,5 +1,5 @@
 interface IStoryAttributes {
-  Id: number;
+  Id: string;
   Title: string;
   Description: string;
   AuthorUserName: string;
@@ -16,7 +16,7 @@ export interface IUpdateStoryInput {
 }
 
 export interface ICreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
-export interface IStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
+export interface IStoryDTO extends IStoryAttributes {}
 export interface IUpdateStoryDTO {
   Title?: string;
   Description?: string;

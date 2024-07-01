@@ -11,7 +11,7 @@ export const signUp = async (
   const trx: Knex.Transaction = await db.transaction();
   try {
     await trx('Auth').insert(signUpAuthInfo);
-    const [Id]: number[] = await trx('Users').insert(signUpUserInfo);
+    const [Id]: string[] = await trx('Users').insert(signUpUserInfo);
 
     await trx.commit();
 

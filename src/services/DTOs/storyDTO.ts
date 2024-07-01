@@ -31,11 +31,13 @@ export class CreateStoryDTO implements ICreateStoryDTO {
 }
 
 export class StoryDTO implements IStoryDTO {
+  Id: string;
   Title: string;
   Description: string;
   AuthorUserName: string;
 
   constructor(story: IStory) {
+    this.Id = story.Id;
     this.Title = story.Title;
     this.Description = story.Description;
     this.AuthorUserName = story.AuthorUserName;
@@ -43,6 +45,7 @@ export class StoryDTO implements IStoryDTO {
   }
   validateData() {
     if (
+      this.Id == undefined ||
       this.Title == undefined ||
       this.Description == undefined ||
       this.AuthorUserName == undefined

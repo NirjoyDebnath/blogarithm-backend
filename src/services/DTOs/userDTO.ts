@@ -2,12 +2,14 @@ import {
   IUser,
   IUpdateUserDTO,
   IUserDTO,
-  IUpdateUserInput
+  IUpdateUserInput,
+  IUpdatePasswordUserInputDTO,
+  IUpdatePasswordUserInput
 } from '../../interfaces/user';
 import { AppError } from '../../utils/appError';
 
 export class UserDTO implements IUserDTO {
-  Id: number;
+  Id: string;
   UserName: string;
   Name: string;
   Email: string;
@@ -48,6 +50,22 @@ export class UpdateUserDTO implements IUpdateUserDTO {
       this.Email == undefined &&
       this.Name == undefined
     ) {
+      throw new AppError(400, 'Data missing');
+    }
+  }
+}
+
+export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
+  CurrentPassword: string;
+  NewPassword: string;
+
+  constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
+    this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
+    this.NewPassword = updatePasswordUserInput.NewPassword;
+    this.validateData();
+  }
+  validateData() {
+    if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
       throw new AppError(400, 'Data missing');
     }
   }

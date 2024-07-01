@@ -8,7 +8,7 @@ import { Role } from '../interfaces/user';
 const isAuthorizedWithUserName = async (
   req: StoryDataRequest
 ): Promise<boolean> => {
-  const id: number = Number(req.params.id);
+  const id: string = req.params.id;
   if (!id) {
     throw new AppError(404, 'Bad request');
   }

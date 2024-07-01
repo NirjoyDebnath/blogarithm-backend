@@ -12,7 +12,7 @@ export const getAllUsers = async (
   return users;
 };
 
-export const getUserById = async (id: number): Promise<IUser | undefined> => {
+export const getUserById = async (id: string): Promise<IUser | undefined> => {
   const users: IUser | undefined = await db<IUser>('Users')
     .select('*')
     .where('Id', id)
@@ -30,24 +30,8 @@ export const getUserByUserName = async (
   return users;
 };
 
-export const deleteUserByUserName = async (
-  userName: string
-): Promise<boolean> => {
-  const trx = await db.transaction();
-
-  try {
-    await trx('Users').where('UserName', userName).del();
-    await trx('Auth').where('UserName', userName).del();
-    await trx.commit();
-    return true;
-  } catch (err) {
-    await trx.rollback();
-    throw err;
-  }
-};
-
 export const updateUserById = async (
-  id: number,
+  id: string,
   updateUserDTO: IUpdateUserDTO
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('users')
@@ -65,4 +49,21 @@ export const updatePassword = async (
     .where('UserName', UserName)
     .update({ Password, PasswordModifiedAt });
   return isUpdated;
+};
+
+export const deleteUserById = async (
+  id: string,
+  userName: string
+): Promise<boolean> => {
+  const trx = await db.transaction();
+
+  try {
+    await trx('Users').where('Id', id).del();
+    await trx('Auth').where('UserName', userName).del();
+    await trx.commit();
+    return true;
+  } catch (err) {
+    await trx.rollback();
+    throw err;
+  }
 };

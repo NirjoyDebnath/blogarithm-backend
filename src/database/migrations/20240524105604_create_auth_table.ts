@@ -2,7 +2,7 @@ import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('auth', function (table) {
-    table.increments('Id').primary().unique();
+    table.uuid('Id').primary().unique().defaultTo(knex.fn.uuid());
     table.string('UserName').notNullable().unique();
     table.string('Password').notNullable();
     table.dateTime('PasswordModifiedAt').notNullable();

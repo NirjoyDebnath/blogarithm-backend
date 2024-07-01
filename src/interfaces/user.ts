@@ -1,5 +1,5 @@
 interface IUserAttributes {
-  Id: number;
+  Id: string;
   UserName: string;
   Email: string;
   Name: string;
@@ -13,6 +13,10 @@ export interface IUpdateUserInput {
   Email?: string;
   Name?: string;
 }
+export interface IUpdatePasswordUserInput {
+  CurrentPassword: string;
+  NewPassword: string;
+}
 
 export enum Role {
   user = 0,
@@ -25,6 +29,10 @@ export interface IUpdateUserDTO {
   UserName?: string;
   Email?: string;
   Name?: string;
+}
+export interface IUpdatePasswordUserInputDTO {
+  CurrentPassword: string;
+  NewPassword: string;
 }
 
 export interface IUserQueryParams {

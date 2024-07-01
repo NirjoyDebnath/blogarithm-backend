@@ -13,11 +13,9 @@ export const getToken = async (user: IUser): Promise<string> => {
     name: user.Name,
     role: user.Role
   };
-  const token =
-    'Bearer ' +
-    jwt.sign(payload, ENV.SecretKey, {
-      expiresIn: ENV.JwtTokenExpire || '2d'
-    });
+  const token = jwt.sign(payload, ENV.SecretKey, {
+    expiresIn: ENV.JwtTokenExpire || '2d'
+  });
   return token;
 };
 

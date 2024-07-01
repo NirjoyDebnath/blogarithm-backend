@@ -1,6 +1,6 @@
-import { ENV } from '../config/conf';
 import { AppError } from './appError';
 import { Request, Response, NextFunction } from 'express';
+import { sendResponse } from './responses';
 
 const tokenExpireError: AppError = new AppError(
   401,
@@ -28,10 +28,8 @@ export const handleGlobalError = (
   res: Response,
   _next: NextFunction
 ) => {
-  if (ENV.Environment === 'development') {
-    // eslint-disable-next-line no-console
-    console.log(err.name, err.isOperational, err);
-  }
+  // eslint-disable-next-line no-console
+  console.log(err.name, err.isOperational, err);
   if (err.isOperational === undefined || false) {
     const errorName: string = err.code || err.name;
 
@@ -54,7 +52,5 @@ export const handleGlobalError = (
         err.status = 'error';
     }
   }
-  res
-    .status(err.statusCode)
-    .json({ status: err.status, message: err.message, name: err.name });
+  sendResponse(req, res, err.statusCode, err.status + ': ' + err.message);
 };
