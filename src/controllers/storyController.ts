@@ -3,6 +3,7 @@ import * as storyService from '../services/storyService';
 import { sendResponse } from '../utils/responses';
 import { ICreateStoryDTO, IStoryDTO } from '../interfaces/story';
 import { StoryDataRequest } from '../interfaces/auth';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const createStory = async (
   req: StoryDataRequest,
@@ -14,7 +15,7 @@ export const createStory = async (
       req.body,
       req.tokenInfo!
     );
-    sendResponse(req, res, 201, 'Story create successful', story);
+    sendResponse(req, res, HttpStatusCode.CREATED, 'Story create successful', story);
   } catch (err) {
     next(err);
   }
@@ -27,7 +28,7 @@ export const getStories = async (
 ): Promise<void> => {
   try {
     const stories: IStoryDTO[] = await storyService.getStories(req.query);
-    sendResponse<IStoryDTO[]>(req, res, 200, 'All Stories', stories);
+    sendResponse<IStoryDTO[]>(req, res, HttpStatusCode.OK, 'All Stories', stories);
   } catch (err) {
     next(err);
   }
@@ -40,7 +41,7 @@ export const getStoryById = async (
 ): Promise<void> => {
   try {
     const story: IStoryDTO = await storyService.getStoryById(req.params.id);
-    sendResponse<IStoryDTO>(req, res, 200, 'Got the story', story);
+    sendResponse<IStoryDTO>(req, res, HttpStatusCode.OK, 'Got the story', story);
   } catch (err) {
     next(err);
   }
@@ -53,7 +54,7 @@ export const updateStoryById = async (
 ): Promise<void> => {
   try {
     await storyService.updateStoryById(req.params.id, req.body);
-    sendResponse(req, res, 200, 'Updated');
+    sendResponse(req, res, HttpStatusCode.OK, 'Updated');
   } catch (err) {
     next(err);
   }
@@ -66,7 +67,7 @@ export const deleteStoryById = async (
 ): Promise<void> => {
   try {
     await storyService.deleteStoryById(req.params.id);
-    sendResponse(req, res, 200, 'Deleted');
+    sendResponse(req, res, HttpStatusCode.OK, 'Deleted');
   } catch (err) {
     next(err);
   }

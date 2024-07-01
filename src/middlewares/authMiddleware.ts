@@ -4,6 +4,7 @@ import { ENV } from '../config/conf';
 import jwt from 'jsonwebtoken';
 import { AuthRequest, IAuth, ITokenInfo } from '../interfaces/auth';
 import { getAuthByUserId } from '../repositories/authRepository';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const authenticateUser = async (
   req: AuthRequest,
@@ -13,10 +14,10 @@ export const authenticateUser = async (
   try {
     const token: string | undefined = req.headers.authorization?.split(' ')[1];
     if (!token) {
-      return next(new AppError(401, 'User not logged in'));
+      return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
     }
     if (ENV.SecretKey === undefined) {
-      return next(new AppError(500, 'Something went wrong'));
+      return next(new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong'));
     }
     const tokenInfo: ITokenInfo = jwt.verify(
       token,
@@ -24,12 +25,12 @@ export const authenticateUser = async (
     ) as ITokenInfo;
     const auth: IAuth | undefined = await getAuthByUserId(tokenInfo.id);
     if (!auth) {
-      return next(new AppError(400, 'User doesnot exist'));
+      return next(new AppError(HttpStatusCode.NOT_FOUND, 'Not Found'));
     }
     const passwordModifiedAtInSecond: number =
       auth.PasswordModifiedAt.getTime() / 1000;
     if (passwordModifiedAtInSecond > tokenInfo.iat) {
-      return next(new AppError(401, 'You are not authorized'));
+      return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
     }
     req.tokenInfo = tokenInfo;
     next();

@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
 import {
   IUser,
   IUpdateUserDTO,
@@ -47,7 +48,7 @@ export class UserDTO implements IUserDTO {
       this.Name == undefined ||
       this.Email == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -69,7 +70,7 @@ export class UpdateUserDTO implements IUpdateUserDTO {
       this.Email == undefined &&
       this.Name == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -85,7 +86,7 @@ export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
   }
   validateData() {
     if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }

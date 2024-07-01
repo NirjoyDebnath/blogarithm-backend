@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
 import {
   ICreateStoryDTO,
   ICreateStoryInfo,
@@ -28,7 +29,7 @@ export class CreateStoryDTO implements ICreateStoryDTO {
       this.Description == undefined ||
       this.AuthorUserName == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -73,7 +74,7 @@ export class StoryDTO implements IStoryDTO {
       this.Description == undefined ||
       this.AuthorUserName == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -90,7 +91,7 @@ export class UpdateStoryDTO implements IUpdateStoryDTO {
   }
   validateData() {
     if (this.Title == undefined && this.Description == undefined) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }

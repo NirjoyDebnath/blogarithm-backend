@@ -13,6 +13,7 @@ import { getUserById } from '../repositories/userRepository';
 import { LogInDTO, SignUpAuthDTO, SignUpUserDTO } from './DTOs/authDTO';
 import { getToken } from '../utils/jwtHelper';
 import { AppError } from '../utils/appError';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const signUp = async (
   signUpUserInput: ISignUpUserInputType
@@ -30,7 +31,7 @@ export const logIn = async (
   const auth: IAuth | undefined = await authRepository.logIn(logInDTO);
 
   if (!auth) {
-    throw new AppError(400, 'Invalid username');
+    throw new AppError(HttpStatusCode.BAD_REQUEST, 'Invalid username');
   } else {
     const { UserId, Password } = auth;
     const isPasswordMatched: boolean = await isHashMatched(
@@ -41,13 +42,13 @@ export const logIn = async (
       const user = await getUserById(UserId);
 
       if (!user) {
-        throw new AppError(400, 'Unexpected error');
+        throw new AppError(HttpStatusCode.BAD_REQUEST, 'Unexpected error');
       }
 
       const token: string = await getToken(user);
       return token;
     } else {
-      throw new AppError(401, 'Incorrect password');
+      throw new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect password');
     }
   }
 };

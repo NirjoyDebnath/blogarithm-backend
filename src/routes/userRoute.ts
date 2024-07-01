@@ -20,6 +20,6 @@ router
     userMiddleware.authorizeUpdate,
     userController.updateUserById
   )
-  .patch(authMiddleware.authenticateUser, userController.updatePassword);
+  .patch(authMiddleware.authenticateUser, userController.updatePasswordById);
 
 export default { router };

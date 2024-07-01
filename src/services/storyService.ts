@@ -13,6 +13,7 @@ import * as storyRepository from '../repositories/storyRepository';
 import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
 import { ENV } from '../config/conf';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -45,7 +46,7 @@ export const getStories = async (
     storyDTO.push(new StoryDTO(story));
   });
   if (storyDTO.length === 0) {
-    throw new AppError(404, 'No stories found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'No stories found');
   }
   return storyDTO;
 };
@@ -53,7 +54,7 @@ export const getStories = async (
 export const getStoryById = async (id: string): Promise<IStoryDTO> => {
   const story: IStory | undefined = await storyRepository.getStoryById(id);
   if (!story) {
-    throw new AppError(404, 'No such story');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'No such story');
   }
   const storyDTO: IStoryDTO = new StoryDTO(story);
   return storyDTO;
@@ -69,13 +70,13 @@ export const updateStoryById = async (
     updateStoryDTO
   );
   if (isUpdated == false) {
-    throw new AppError(404, 'No such sroty');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'No such sroty');
   }
 };
 
 export const deleteStoryById = async (id: string): Promise<void> => {
   const isDeleted: boolean = await storyRepository.deleteStoryById(id);
   if (isDeleted == false) {
-    throw new AppError(404, 'No such sroty');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'No such story');
   }
 };

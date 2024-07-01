@@ -30,13 +30,13 @@ export const updateUserById = async (
   return isUpdated;
 };
 
-export const updatePassword = async (
-  UserName: string,
+export const updatePasswordById = async (
+  id: string,
   Password: string,
   PasswordModifiedAt: Date
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('auth')
-    .where('UserName', UserName)
+    .where('UserId', id)
     .update({ Password, PasswordModifiedAt });
   return isUpdated;
 };

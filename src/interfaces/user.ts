@@ -1,3 +1,4 @@
+import { Role } from "../enums/roles";
 interface IUserAttributes {
   Id: string;
   UserName: string;
@@ -18,10 +19,6 @@ export interface IUpdatePasswordUserInput {
   NewPassword: string;
 }
 
-export enum Role {
-  user = 0,
-  admin = 1
-}
 export interface IHATEOASLink {
   href: string;
   rel: string;
@@ -45,3 +42,4 @@ export interface IUpdatePasswordUserInputDTO {
 export interface IUserQueryParams {
   page?: number;
 }
+

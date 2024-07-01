@@ -1,13 +1,14 @@
 import { AppError } from './appError';
 import { Request, Response, NextFunction } from 'express';
 import { sendResponse } from './responses';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 const tokenExpireError: AppError = new AppError(
-  401,
+  HttpStatusCode.UNAUTHORIZED,
   'Your session has been expired.'
 );
 const jsonWebTokenError: AppError = new AppError(
-  401,
+  HttpStatusCode.UNAUTHORIZED,
   'You are not authorised.'
 );
 
@@ -41,13 +42,13 @@ export const handleGlobalError = (
         err = jsonWebTokenError;
         break;
       case 'ER_DUP_ENTRY':
-        err.statusCode = 400;
+        err.statusCode = HttpStatusCode.BAD_REQUEST;
         err.message = parseMessage(err.name, err.sqlMessage!);
         err.status = 'Fail';
         break;
       //ER_BAD_FIELD_ERROR
       default:
-        err.statusCode = 500;
+        err.statusCode = HttpStatusCode.INTERNAL_SERVER_ERROR;
         err.message = 'Something went wrong';
         err.status = 'error';
     }

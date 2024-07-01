@@ -15,6 +15,7 @@ import { UpdatePasswordUserInputDTO } from './DTOs/userDTO';
 import { AppError } from '../utils/appError';
 import { ENV } from '../config/conf';
 import { getHash, isHashMatched } from '../utils/authHelper';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const getAllUsers = async (
   userQueryParams: IUserQueryParams
@@ -28,7 +29,7 @@ export const getAllUsers = async (
     usersDTO.push(new UserDTO(user));
   });
   if (usersDTO.length === 0) {
-    throw new AppError(404, 'No users found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
   }
   return usersDTO;
 };
@@ -36,7 +37,7 @@ export const getAllUsers = async (
 export const getUserById = async (id: string): Promise<IUserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
   if (!user) {
-    throw new AppError(404, 'No user found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
   }
   const userDTO: IUserDTO = new UserDTO(user);
   return userDTO;
@@ -52,25 +53,24 @@ export const updateUserById = async (
     updateUserDTO
   );
   if (!isUpdated) {
-    throw new AppError(500, 'Something went wrong.');
+    throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
   }
 };
 
-export const updatePassword = async (
+export const updatePasswordById = async (
+  id:string,
   tokenInfo: ITokenInfo,
   updatePasswordUserInput: IUpdatePasswordUserInput
 ): Promise<void> => {
-  const auth: IAuth | undefined = await authRepository.getAuthByUserId(
-    tokenInfo.id
-  );
+  const auth: IAuth | undefined = await authRepository.getAuthByUserId(id);
   if (!auth) {
-    throw new AppError(404, 'Bad request');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
   }
   const updatePasswordUserInputDTO: IUpdatePasswordUserInputDTO =
     new UpdatePasswordUserInputDTO(updatePasswordUserInput);
   const { CurrentPassword, NewPassword } = updatePasswordUserInputDTO;
   if (CurrentPassword === NewPassword) {
-    throw new AppError(400, 'Bad request');
+    throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
   }
   const isPasswordMatched: boolean = await isHashMatched(
     CurrentPassword,
@@ -79,16 +79,16 @@ export const updatePassword = async (
   if (isPasswordMatched) {
     const passwordModifiedAt = new Date();
     const hashedNewPassword: string = await getHash(NewPassword);
-    const isUpdated: boolean = await userRepository.updatePassword(
-      auth.UserName,
+    const isUpdated: boolean = await userRepository.updatePasswordById(
+      id,
       hashedNewPassword,
       passwordModifiedAt
     );
     if (!isUpdated) {
-      throw new AppError(500, 'Something went wrong.');
+      throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
     }
   } else {
-    throw new AppError(403, 'Incorrect password');
+    throw new AppError(HttpStatusCode.FORBIDDEN, 'Incorrect password');
   }
 };
 
