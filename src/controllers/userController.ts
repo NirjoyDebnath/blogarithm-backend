@@ -3,6 +3,8 @@ import * as userService from '../services/userService';
 import { sendResponse } from '../utils/responses';
 import { IUserDTO } from '../interfaces/user';
 import { UserDataRequest } from '../interfaces/auth';
+import { AuthRequest } from '../interfaces/auth';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const getAllUsers = async (
   req: Request,
@@ -10,8 +12,8 @@ export const getAllUsers = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const usersDTO: IUserDTO[] = await userService.getAllUsers(req.params);
-    sendResponse<IUserDTO[]>(req, res, 200, 'Got the users', usersDTO);
+    const usersDTO: IUserDTO[] = await userService.getAllUsers(req.query);
+    sendResponse<IUserDTO[]>(req, res, HttpStatusCode.OK, 'Got the users', usersDTO);
   } catch (err) {
     next(err);
   }
@@ -23,10 +25,8 @@ export const getUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userDTO: IUserDTO = await userService.getUserById(
-      Number(req.params.id)
-    );
-    sendResponse<IUserDTO>(req, res, 200, 'Got the user', userDTO);
+    const userDTO: IUserDTO = await userService.getUserById(req.params.id);
+    sendResponse<IUserDTO>(req, res, HttpStatusCode.OK, 'Got the user', userDTO);
   } catch (err) {
     next(err);
   }
@@ -38,8 +38,8 @@ export const deleteUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.deleteUserByUserName(req.user!);
-    sendResponse(req, res, 200, 'User deleted');
+    await userService.deleteUserById(req.params.id, req.user!.UserName);
+    sendResponse(req, res, HttpStatusCode.OK, 'User deleted');
   } catch (err) {
     next(err);
   }
@@ -51,8 +51,21 @@ export const updateUserById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updateUserById(Number(req.params.id), req.body);
-    sendResponse(req, res, 200, 'User Updated');
+    await userService.updateUserById(req.params.id, req.body);
+    sendResponse(req, res, HttpStatusCode.OK, 'User Updated');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updatePasswordById = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await userService.updatePasswordById(req.params.id, req.tokenInfo!, req.body);
+    sendResponse<string>(req, res, HttpStatusCode.OK, 'Update password successful');
   } catch (err) {
     next(err);
   }

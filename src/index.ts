@@ -12,11 +12,6 @@ app.use('/api/users', userRouter.router);
 app.use('/api/auth', authRouter.router);
 app.use('/api/story', storyRouter.router);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-//   res.status(500).json({ message: err.message, error: err });
-// });
-
 app.use(handleGlobalError);
 
 app.listen(port, () => {

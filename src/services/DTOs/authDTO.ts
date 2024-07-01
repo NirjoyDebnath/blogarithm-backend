@@ -3,12 +3,11 @@ import {
   ISignUpUserDTO,
   ISignUpAuthDTO,
   ILogInDTO,
-  IUpdatePasswordUserInputDTO,
-  IUpdatePasswordUserInput,
   ILogInAuthInputType
 } from '../../interfaces/auth';
-import { Role } from '../../interfaces/user';
+import { Role } from '../../enums/roles'; 
 import { AppError } from '../../utils/appError';
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
 
 export class SignUpUserDTO implements ISignUpUserDTO {
   UserName: string;
@@ -31,7 +30,7 @@ export class SignUpUserDTO implements ISignUpUserDTO {
       this.Email == undefined ||
       this.Name == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -49,7 +48,7 @@ export class SignUpAuthDTO implements ISignUpAuthDTO {
   }
   validateData() {
     if (this.UserName == undefined || this.Password == undefined) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -65,23 +64,7 @@ export class LogInDTO implements ILogInDTO {
   }
   validateData() {
     if (this.UserName == undefined || this.Password == undefined) {
-      throw new AppError(400, 'Data missing');
-    }
-  }
-}
-
-export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
-  CurrentPassword: string;
-  NewPassword: string;
-
-  constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
-    this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
-    this.NewPassword = updatePasswordUserInput.NewPassword;
-    this.validateData();
-  }
-  validateData() {
-    if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }

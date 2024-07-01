@@ -1,22 +1,24 @@
-import { ILogInDTO, ISignUpUserInfoType } from '../interfaces/auth';
-import { IAuth, ISignUpAuthInfoType } from '../interfaces/auth';
+import { ILogInDTO, ISignUpUserDTO } from '../interfaces/auth';
+import { IAuth, ISignUpAuthDTO } from '../interfaces/auth';
 import { IUser } from '../interfaces/auth';
 import db from '../database/db';
 import { Knex } from 'knex';
 
 export const signUp = async (
-  signUpUserInfo: ISignUpUserInfoType,
-  signUpAuthInfo: ISignUpAuthInfoType
+  signUpUserInfo: ISignUpUserDTO,
+  signUpAuthInfo: ISignUpAuthDTO
 ): Promise<IUser> => {
   const trx: Knex.Transaction = await db.transaction();
   try {
-    await trx('Auth').insert(signUpAuthInfo);
-    const [Id]: number[] = await trx('Users').insert(signUpUserInfo);
+    await trx('Users').insert(signUpUserInfo);
+    const user = await trx<IUser>('Users')
+      .select('*')
+      .where('UserName', signUpUserInfo.UserName)
+      .first();
+    await trx('Auth').insert({ UserId: user!.Id, ...signUpAuthInfo });
 
     await trx.commit();
-
-    const user: IUser = { Id, ...signUpUserInfo };
-    return user;
+    return user!;
   } catch (err) {
     await trx.rollback();
     throw err;
@@ -33,23 +35,9 @@ export const logIn = async (
   return auth;
 };
 
-export const getAuthByUserName = async (
-  userName: string
+export const getAuthByUserId = async (
+  id: string
 ): Promise<IAuth | undefined> => {
-  const auth = await db<IAuth>('auth')
-    .select('*')
-    .where('UserName', userName)
-    .first();
+  const auth = await db<IAuth>('auth').select('*').where('UserId', id).first();
   return auth;
-};
-
-export const updatePassword = async (
-  UserName: string,
-  Password: string,
-  PasswordModifiedAt: Date
-): Promise<boolean> => {
-  const isUpdated: boolean = await db('auth')
-    .where('UserName', UserName)
-    .update({ Password, PasswordModifiedAt });
-  return isUpdated;
 };

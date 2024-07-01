@@ -3,24 +3,17 @@ import {
   ILogInDTO,
   ISignUpAuthDTO,
   ISignUpUserDTO,
-  ITokenInfo,
-  IUpdatePasswordUserInput,
-  IUpdatePasswordUserInputDTO,
   ILogInAuthInputType
 } from '../interfaces/auth';
 import { IAuth } from '../interfaces/auth';
 import * as authRepository from '../repositories/authRepository';
 import { getHash } from '../utils/authHelper';
 import { isHashMatched } from '../utils/authHelper';
-import { getUserByUserName } from '../repositories/userRepository';
-import {
-  LogInDTO,
-  SignUpAuthDTO,
-  SignUpUserDTO,
-  UpdatePasswordUserInputDTO
-} from './DTOs/authDTO';
+import { getUserById } from '../repositories/userRepository';
+import { LogInDTO, SignUpAuthDTO, SignUpUserDTO } from './DTOs/authDTO';
 import { getToken } from '../utils/jwtHelper';
 import { AppError } from '../utils/appError';
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 export const signUp = async (
   signUpUserInput: ISignUpUserInputType
@@ -38,57 +31,24 @@ export const logIn = async (
   const auth: IAuth | undefined = await authRepository.logIn(logInDTO);
 
   if (!auth) {
-    throw new AppError(400, 'Invalid username');
+    throw new AppError(HttpStatusCode.BAD_REQUEST, 'Invalid username');
   } else {
-    const { UserName, Password } = auth;
+    const { UserId, Password } = auth;
     const isPasswordMatched: boolean = await isHashMatched(
       logInUserInput.Password,
       Password
     );
     if (isPasswordMatched) {
-      const user = await getUserByUserName(UserName);
+      const user = await getUserById(UserId);
 
       if (!user) {
-        throw new AppError(400, 'Unexpected error');
+        throw new AppError(HttpStatusCode.BAD_REQUEST, 'Unexpected error');
       }
 
       const token: string = await getToken(user);
       return token;
     } else {
-      throw new AppError(401, 'Incorrect password');
+      throw new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect password');
     }
-  }
-};
-
-export const updatePassword = async (
-  tokenInfo: ITokenInfo,
-  updatePasswordUserInput: IUpdatePasswordUserInput
-): Promise<void> => {
-  const auth: IAuth | undefined = await authRepository.getAuthByUserName(
-    tokenInfo.userName
-  );
-  if (!auth) {
-    throw new AppError(400, 'Bad request');
-  }
-  const updatePasswordUserInputDTO: IUpdatePasswordUserInputDTO =
-    new UpdatePasswordUserInputDTO(updatePasswordUserInput);
-  const { CurrentPassword, NewPassword } = updatePasswordUserInputDTO;
-  const isPasswordMatched: boolean = await isHashMatched(
-    CurrentPassword,
-    auth.Password
-  );
-  if (isPasswordMatched) {
-    const passwordModifiedAt = new Date();
-    const hashedNewPassword: string = await getHash(NewPassword);
-    const isUpdated: boolean = await authRepository.updatePassword(
-      auth.UserName,
-      hashedNewPassword,
-      passwordModifiedAt
-    );
-    if (!isUpdated) {
-      throw new AppError(500, 'Something went wrongg.');
-    }
-  } else {
-    throw new AppError(401, 'Incorrect password');
   }
 };

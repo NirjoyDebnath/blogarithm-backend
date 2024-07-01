@@ -18,7 +18,7 @@ export const getAllStories = async (
   return stories;
 };
 
-export const getStoryById = async (id: number): Promise<IStory | undefined> => {
+export const getStoryById = async (id: string): Promise<IStory | undefined> => {
   const story: IStory | undefined = await db<IStory>('Stories')
     .select('*')
     .where('Id', id)
@@ -26,21 +26,21 @@ export const getStoryById = async (id: number): Promise<IStory | undefined> => {
   return story;
 };
 
-export const getStoriesByUserName = async (
-  AuthorUserName: string,
+export const getStoriesByUserId = async (
+  AuthorId: string,
   storyPerPage: number,
   offset: number
 ): Promise<IStory[]> => {
   const stories: IStory[] = await db<IStory>('Stories')
     .select('*')
-    .where('AuthorUserName', AuthorUserName)
+    .where('AuthorId', AuthorId)
     .limit(storyPerPage)
     .offset(offset);
   return stories;
 };
 
 export const updateStoryById = async (
-  id: number,
+  id: string,
   updateStoryDTO: IUpdateStoryDTO
 ): Promise<boolean> => {
   const isUpdated: boolean = await db('Stories')
@@ -49,7 +49,7 @@ export const updateStoryById = async (
   return isUpdated;
 };
 
-export const deleteStoryById = async (id: number): Promise<boolean> => {
+export const deleteStoryById = async (id: string): Promise<boolean> => {
   const isDeleted: boolean = await db('Stories').where('Id', id).del();
   return isDeleted;
 };
