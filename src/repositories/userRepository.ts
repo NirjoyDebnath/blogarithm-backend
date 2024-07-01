@@ -13,21 +13,11 @@ export const getAllUsers = async (
 };
 
 export const getUserById = async (id: string): Promise<IUser | undefined> => {
-  const users: IUser | undefined = await db<IUser>('Users')
+  const user: IUser | undefined = await db<IUser>('Users')
     .select('*')
     .where('Id', id)
     .first();
-  return users;
-};
-
-export const getUserByUserName = async (
-  userName: string
-): Promise<IUser | undefined> => {
-  const users: IUser | undefined = await db<IUser>('Users')
-    .select('*')
-    .where('UserName', userName)
-    .first();
-  return users;
+  return user;
 };
 
 export const updateUserById = async (

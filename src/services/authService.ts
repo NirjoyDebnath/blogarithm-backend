@@ -9,7 +9,7 @@ import { IAuth } from '../interfaces/auth';
 import * as authRepository from '../repositories/authRepository';
 import { getHash } from '../utils/authHelper';
 import { isHashMatched } from '../utils/authHelper';
-import { getUserByUserName } from '../repositories/userRepository';
+import { getUserById } from '../repositories/userRepository';
 import { LogInDTO, SignUpAuthDTO, SignUpUserDTO } from './DTOs/authDTO';
 import { getToken } from '../utils/jwtHelper';
 import { AppError } from '../utils/appError';
@@ -32,13 +32,13 @@ export const logIn = async (
   if (!auth) {
     throw new AppError(400, 'Invalid username');
   } else {
-    const { UserName, Password } = auth;
+    const { UserId, Password } = auth;
     const isPasswordMatched: boolean = await isHashMatched(
       logInUserInput.Password,
       Password
     );
     if (isPasswordMatched) {
-      const user = await getUserByUserName(UserName);
+      const user = await getUserById(UserId);
 
       if (!user) {
         throw new AppError(400, 'Unexpected error');

@@ -60,8 +60,8 @@ export const updatePassword = async (
   tokenInfo: ITokenInfo,
   updatePasswordUserInput: IUpdatePasswordUserInput
 ): Promise<void> => {
-  const auth: IAuth | undefined = await authRepository.getAuthByUserName(
-    tokenInfo.userName
+  const auth: IAuth | undefined = await authRepository.getAuthByUserId(
+    tokenInfo.id
   );
   if (!auth) {
     throw new AppError(404, 'Bad request');

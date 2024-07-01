@@ -26,14 +26,14 @@ export const getStoryById = async (id: string): Promise<IStory | undefined> => {
   return story;
 };
 
-export const getStoriesByUserName = async (
-  AuthorUserName: string,
+export const getStoriesByUserId = async (
+  AuthorId: string,
   storyPerPage: number,
   offset: number
 ): Promise<IStory[]> => {
   const stories: IStory[] = await db<IStory>('Stories')
     .select('*')
-    .where('AuthorUserName', AuthorUserName)
+    .where('AuthorId', AuthorId)
     .limit(storyPerPage)
     .offset(offset);
   return stories;

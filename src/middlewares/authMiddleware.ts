@@ -3,7 +3,7 @@ import { AppError } from '../utils/appError';
 import { ENV } from '../config/conf';
 import jwt from 'jsonwebtoken';
 import { AuthRequest, IAuth, ITokenInfo } from '../interfaces/auth';
-import { getAuthByUserName } from '../repositories/authRepository';
+import { getAuthByUserId } from '../repositories/authRepository';
 
 export const authenticateUser = async (
   req: AuthRequest,
@@ -22,7 +22,7 @@ export const authenticateUser = async (
       token,
       ENV.SecretKey
     ) as ITokenInfo;
-    const auth: IAuth | undefined = await getAuthByUserName(tokenInfo.userName);
+    const auth: IAuth | undefined = await getAuthByUserId(tokenInfo.id);
     if (!auth) {
       return next(new AppError(400, 'User doesnot exist'));
     }

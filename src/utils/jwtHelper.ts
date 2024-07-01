@@ -9,6 +9,7 @@ export const getToken = async (user: IUser): Promise<string> => {
     throw new AppError(500, 'Something went wrong');
   }
   const payload: IPayload = {
+    id: user.Id,
     userName: user.UserName,
     name: user.Name,
     role: user.Role

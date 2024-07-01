@@ -4,7 +4,8 @@ import {
   IUserDTO,
   IUpdateUserInput,
   IUpdatePasswordUserInputDTO,
-  IUpdatePasswordUserInput
+  IUpdatePasswordUserInput,
+  IHATEOASLink
 } from '../../interfaces/user';
 import { AppError } from '../../utils/appError';
 
@@ -13,12 +14,30 @@ export class UserDTO implements IUserDTO {
   UserName: string;
   Name: string;
   Email: string;
+  _links: IHATEOASLink[];
 
   constructor(user: IUser) {
     this.Id = user.Id;
     this.UserName = user.UserName;
     this.Name = user.Name;
     this.Email = user.Email;
+    this._links = [
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'get user',
+        type: 'GET'
+      },
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'delete user',
+        type: 'DELETE'
+      },
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'update user',
+        type: 'UPDATE'
+      }
+    ];
     this.validateData();
   }
   validateData() {

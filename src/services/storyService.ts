@@ -18,8 +18,9 @@ export const createStory = async (
   createStoryInput: ICreateStoryInput,
   tokenInfo: ITokenInfo
 ): Promise<ICreateStoryDTO> => {
-  const { userName } = tokenInfo;
+  const { id, userName } = tokenInfo;
   const createStoryInfo: ICreateStoryInfo = {
+    AuthorId: id,
     AuthorUserName: userName,
     ...createStoryInput
   };
@@ -31,22 +32,21 @@ export const createStory = async (
 export const getStories = async (
   storyQueryParams: IStoryQueryParams
 ): Promise<IStoryDTO[]> => {
-  const { AuthorUserName } = storyQueryParams;
+  const { AuthorId } = storyQueryParams;
   const page: number = storyQueryParams.page || 1;
   const offset: number = Number(ENV.StoryPerPage) * (page - 1);
   const storyPerPage: number = Number(ENV.StoryPerPage);
-  const stories: IStory[] = AuthorUserName
-    ? await storyRepository.getStoriesByUserName(
-        AuthorUserName,
-        storyPerPage,
-        offset
-      )
+  const stories: IStory[] = AuthorId
+    ? await storyRepository.getStoriesByUserId(AuthorId, storyPerPage, offset)
     : await storyRepository.getAllStories(storyPerPage, offset);
 
   const storyDTO: StoryDTO[] = [];
   stories.forEach((story) => {
     storyDTO.push(new StoryDTO(story));
   });
+  if (storyDTO.length === 0) {
+    throw new AppError(404, 'No stories found');
+  }
   return storyDTO;
 };
 
