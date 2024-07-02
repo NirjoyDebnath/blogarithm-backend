@@ -3,19 +3,20 @@ import { IUser } from '../interfaces/user';
 import { AppError } from '../utils/appError';
 import { getUserById } from '../repositories/userRepository';
 import { UserDataRequest } from '../interfaces/auth';
-import { Role } from '../interfaces/user';
+import { Role } from '../enums/roles'; 
+import { HttpStatusCode } from '../enums/httpStatusCodes';
 
 const isAuthorizedWithId = async (req: UserDataRequest): Promise<boolean> => {
-  const id: number = Number(req.params.id);
+  const id: string = req.params.id;
   if (!id) {
-    throw new AppError(404, 'Bad request');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
   }
   const user: IUser | undefined = await getUserById(id);
   if (!user) {
-    throw new AppError(404, 'Bad request');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
   }
   if (user.UserName !== req.tokenInfo?.userName) {
-    throw new AppError(401, 'You are not authorized');
+    throw new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized');
   }
   req.user = user;
   return true;
@@ -30,7 +31,7 @@ export const authorizeUpdate = async (
     if (req.tokenInfo?.role === Role.user) {
       const authorizedWithId: boolean = await isAuthorizedWithId(req);
       if (!authorizedWithId) {
-        return next(new AppError(401, 'You are not authorized'));
+        return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
       }
     }
     next();
@@ -48,7 +49,7 @@ export const authorizeDeletion = async (
     if (req.tokenInfo?.role === Role.user) {
       const authorizedWithId: boolean = await isAuthorizedWithId(req);
       if (!authorizedWithId) {
-        return next(new AppError(401, 'You are not authorized'));
+        return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
       }
     }
     next();

@@ -2,12 +2,17 @@ import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('Stories', function (table) {
-    table.increments('Id').primary().unique();
+    table.uuid('Id').primary().unique().defaultTo(knex.fn.uuid());
+    table.uuid('AuthorId').notNullable();
     table.string('Title').notNullable();
     table.text('Description').notNullable();
-    table.string('AuthorName').notNullable();
     table.string('AuthorUserName').notNullable();
-    table.foreign('AuthorUserName').references('UserName').inTable('Users');
+    table
+      .foreign('AuthorId')
+      .references('Id')
+      .inTable('Users')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
   });
 }
 
