@@ -37,6 +37,7 @@ describe('storyController tester', () => {
           Description: 'Mock description'
         },
         tokenInfo: {
+          id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
           userName: 'Nirjoy',
           name: 'Nirjoy Debnath',
           role: 0,
@@ -93,10 +94,28 @@ describe('storyController tester', () => {
       const mockReq: Partial<StoryDataRequest> = {};
       const mockStories: IStoryDTO[] = [
         {
+          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
+          AuthorId: '57298asd1-37a0-11ef-81cc-088fc31977ac',
           Title: 'Mock title',
           Description: 'Mock description',
-          AuthorName: 'Nirjoy Debnath',
-          AuthorUserName: 'Nirjoy'
+          AuthorUserName: 'Nirjoy',
+          _links: [
+            {
+              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
+              rel: 'get author',
+              type: 'GET'
+            },
+            {
+              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
+              rel: 'delete story',
+              type: 'DELETE'
+            },
+            {
+              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
+              rel: 'update story',
+              type: 'UPDATE'
+            }
+          ]
         }
       ];
 
@@ -147,10 +166,28 @@ describe('storyController tester', () => {
       };
       const mockStories: IStoryDTO[] = [
         {
+          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
+          AuthorId: '57298asd1-37a0-11ef-81cc-088fc31977ac',
           Title: 'Mock title',
           Description: 'Mock description',
-          AuthorName: 'Nirjoy Debnath',
-          AuthorUserName: 'Nirjoy'
+          AuthorUserName: 'Nirjoy',
+          _links: [
+            {
+              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
+              rel: 'get author',
+              type: 'GET'
+            },
+            {
+              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
+              rel: 'delete story',
+              type: 'DELETE'
+            },
+            {
+              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
+              rel: 'update story',
+              type: 'UPDATE'
+            }
+          ]
         }
       ];
 
