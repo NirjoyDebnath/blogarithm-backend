@@ -1,8 +1,10 @@
+import { IHATEOASLink } from './user';
+
 interface IStoryAttributes {
-  Id: number;
+  Id: string;
+  AuthorId: string;
   Title: string;
   Description: string;
-  AuthorName: string;
   AuthorUserName: string;
 }
 
@@ -16,13 +18,15 @@ export interface IUpdateStoryInput {
 }
 
 export interface ICreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
-export interface IStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
+export interface IStoryDTO extends IStoryAttributes {
+  _links: IHATEOASLink[];
+}
 export interface IUpdateStoryDTO {
   Title?: string;
   Description?: string;
 }
 
 export interface IStoryQueryParams {
-  AuthorUserName?: string;
+  AuthorId?: string;
   page?: number;
 }

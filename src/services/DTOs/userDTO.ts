@@ -1,22 +1,44 @@
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
 import {
   IUser,
   IUpdateUserDTO,
   IUserDTO,
-  IUpdateUserInput
+  IUpdateUserInput,
+  IUpdatePasswordUserInputDTO,
+  IUpdatePasswordUserInput,
+  IHATEOASLink
 } from '../../interfaces/user';
 import { AppError } from '../../utils/appError';
 
 export class UserDTO implements IUserDTO {
-  Id: number;
+  Id: string;
   UserName: string;
   Name: string;
   Email: string;
+  _links: IHATEOASLink[];
 
   constructor(user: IUser) {
     this.Id = user.Id;
     this.UserName = user.UserName;
     this.Name = user.Name;
     this.Email = user.Email;
+    this._links = [
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'get user',
+        type: 'GET'
+      },
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'delete user',
+        type: 'DELETE'
+      },
+      {
+        href: '/api/users/' + user.Id,
+        rel: 'update user',
+        type: 'UPDATE'
+      }
+    ];
     this.validateData();
   }
   validateData() {
@@ -26,7 +48,7 @@ export class UserDTO implements IUserDTO {
       this.Name == undefined ||
       this.Email == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
@@ -48,7 +70,23 @@ export class UpdateUserDTO implements IUpdateUserDTO {
       this.Email == undefined &&
       this.Name == undefined
     ) {
-      throw new AppError(400, 'Data missing');
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
+    }
+  }
+}
+
+export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
+  CurrentPassword: string;
+  NewPassword: string;
+
+  constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
+    this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
+    this.NewPassword = updatePasswordUserInput.NewPassword;
+    this.validateData();
+  }
+  validateData() {
+    if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
+      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
     }
   }
 }
