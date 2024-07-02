@@ -1,4 +1,3 @@
-import { HttpStatusCode } from '../../enums/httpStatusCodes';
 import {
   ICreateStoryDTO,
   ICreateStoryInfo,
@@ -8,7 +7,6 @@ import {
   IUpdateStoryDTO
 } from '../../interfaces/story';
 import { IHATEOASLink } from '../../interfaces/user';
-import { AppError } from '../../utils/appError';
 
 export class CreateStoryDTO implements ICreateStoryDTO {
   AuthorId: string;
@@ -21,16 +19,6 @@ export class CreateStoryDTO implements ICreateStoryDTO {
     this.Title = createStoryInput.Title;
     this.Description = createStoryInput.Description;
     this.AuthorUserName = createStoryInput.AuthorUserName;
-    this.validateData();
-  }
-  validateData() {
-    if (
-      this.Title == undefined ||
-      this.Description == undefined ||
-      this.AuthorUserName == undefined
-    ) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }
 
@@ -65,17 +53,6 @@ export class StoryDTO implements IStoryDTO {
         type: 'UPDATE'
       }
     ];
-    this.validateData();
-  }
-  validateData() {
-    if (
-      this.Id == undefined ||
-      this.Title == undefined ||
-      this.Description == undefined ||
-      this.AuthorUserName == undefined
-    ) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }
 
@@ -87,11 +64,5 @@ export class UpdateStoryDTO implements IUpdateStoryDTO {
     if (updateStoryInput.Title) this.Title = updateStoryInput.Title;
     if (updateStoryInput.Description)
       this.Description = updateStoryInput.Description;
-    this.validateData();
-  }
-  validateData() {
-    if (this.Title == undefined && this.Description == undefined) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }

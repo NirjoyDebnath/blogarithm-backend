@@ -53,12 +53,15 @@ export const updateUserById = async (
     updateUserDTO
   );
   if (!isUpdated) {
-    throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
+    throw new AppError(
+      HttpStatusCode.INTERNAL_SERVER_ERROR,
+      'Something went wrong.'
+    );
   }
 };
 
 export const updatePasswordById = async (
-  id:string,
+  id: string,
   tokenInfo: ITokenInfo,
   updatePasswordUserInput: IUpdatePasswordUserInput
 ): Promise<void> => {
@@ -85,7 +88,10 @@ export const updatePasswordById = async (
       passwordModifiedAt
     );
     if (!isUpdated) {
-      throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
+      throw new AppError(
+        HttpStatusCode.INTERNAL_SERVER_ERROR,
+        'Something went wrong.'
+      );
     }
   } else {
     throw new AppError(HttpStatusCode.FORBIDDEN, 'Incorrect password');

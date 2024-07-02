@@ -3,7 +3,9 @@ import * as storyController from '../../controllers/storyController';
 import * as storyService from '../../services/storyService';
 import { sendResponse } from '../../utils/responses';
 import { StoryDataRequest } from '../../interfaces/auth';
-import { IStoryDTO } from '../../interfaces/story';
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
+import { mockParamsId, mockTokenInfo } from '../../__mocks__/auth.mock';
+import { mockStoryDTO, mockUpdateStoryInput } from '../../__mocks__/story.mock';
 
 jest.mock('./../../services/storyService', () => ({
   __esModule: true,
@@ -30,24 +32,16 @@ describe('storyController tester', () => {
   });
 
   describe('storyController createStory', () => {
-    test('Story should be created with valid input', async () => {
+    test('Should send HttpStatusCode.CREATED with successful story create', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        },
-        tokenInfo: {
-          id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          userName: 'Nirjoy',
-          name: 'Nirjoy Debnath',
-          role: 0,
-          iat: 10000000000,
-          exp: 10000010000
-        }
+        body: mockUpdateStoryInput,
+        tokenInfo: mockTokenInfo
       };
 
+      (storyService.createStory as jest.Mock).mockResolvedValue(mockStoryDTO);
+
       await storyController.createStory(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
@@ -59,23 +53,21 @@ describe('storyController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
-        'Story create successful'
+        HttpStatusCode.CREATED,
+        'Story create successful',
+        mockStoryDTO
       );
     });
-    test('Story should not be created with invalid input', async () => {
+    test('Should get an error with unsuccessful story create', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        }
+        body: mockUpdateStoryInput
       };
       const mockError: Partial<Error> = {};
 
       (storyService.createStory as jest.Mock).mockRejectedValue(mockError);
 
       await storyController.createStory(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
@@ -90,36 +82,10 @@ describe('storyController tester', () => {
   });
 
   describe('storyController getStories', () => {
-    test('Should get 200 and get the stories', async () => {
+    test('Should get HttpStatusCode.OK with successful stories fetch', async () => {
       const mockReq: Partial<StoryDataRequest> = {};
-      const mockStories: IStoryDTO[] = [
-        {
-          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          AuthorId: '57298asd1-37a0-11ef-81cc-088fc31977ac',
-          Title: 'Mock title',
-          Description: 'Mock description',
-          AuthorUserName: 'Nirjoy',
-          _links: [
-            {
-              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-              rel: 'get author',
-              type: 'GET'
-            },
-            {
-              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
-              rel: 'delete story',
-              type: 'DELETE'
-            },
-            {
-              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
-              rel: 'update story',
-              type: 'UPDATE'
-            }
-          ]
-        }
-      ];
 
-      (storyService.getStories as jest.Mock).mockResolvedValue(mockStories);
+      (storyService.getStories as jest.Mock).mockResolvedValue([mockStoryDTO]);
 
       await storyController.getStories(
         mockReq as Request,
@@ -131,17 +97,14 @@ describe('storyController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'All Stories',
-        mockStories
+        [mockStoryDTO]
       );
     });
-    test('Should get an error', async () => {
+    test('Should get error with unsuccessful stories fetch', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        }
+        body: mockUpdateStoryInput
       };
       const mockError: Partial<Error> = {};
 
@@ -160,38 +123,12 @@ describe('storyController tester', () => {
   });
 
   describe('storyController getStoryById', () => {
-    test('Should get 200 and get a story', async () => {
+    test('Should get HttpStatusCode.OK with successful story fetch', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        params: { id: '1' }
+        params: mockParamsId
       };
-      const mockStories: IStoryDTO[] = [
-        {
-          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          AuthorId: '57298asd1-37a0-11ef-81cc-088fc31977ac',
-          Title: 'Mock title',
-          Description: 'Mock description',
-          AuthorUserName: 'Nirjoy',
-          _links: [
-            {
-              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-              rel: 'get author',
-              type: 'GET'
-            },
-            {
-              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
-              rel: 'delete story',
-              type: 'DELETE'
-            },
-            {
-              href: '/api/story/57298asd1-37a0-11ef-81cc-088fc31977ac',
-              rel: 'update story',
-              type: 'UPDATE'
-            }
-          ]
-        }
-      ];
 
-      (storyService.getStoryById as jest.Mock).mockResolvedValue(mockStories);
+      (storyService.getStoryById as jest.Mock).mockResolvedValue(mockStoryDTO);
 
       await storyController.getStoryById(
         mockReq as Request,
@@ -200,23 +137,20 @@ describe('storyController tester', () => {
       );
 
       expect(storyService.getStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
+        mockReq.params!.id
       );
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Got the story',
-        mockStories
+        mockStoryDTO
       );
     });
-    test('Should get an error', async () => {
+    test('Should get error with unsuccessful story fetch', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        },
-        params: { id: '1' }
+        body: mockUpdateStoryInput,
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
@@ -229,7 +163,7 @@ describe('storyController tester', () => {
       );
 
       expect(storyService.getStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
+        mockReq.params!.id
       );
       expect(sendResponse).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalledWith(mockError);
@@ -237,52 +171,46 @@ describe('storyController tester', () => {
   });
 
   describe('storyController updateStoryById', () => {
-    test('Should get 200 and update a story', async () => {
+    test('Should get HttpStatusCode.OK with successful story update', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        },
-        params: { id: '1' }
+        body: mockUpdateStoryInput,
+        params: mockParamsId
       };
 
       await storyController.updateStoryById(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(storyService.updateStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id),
+        mockReq.params!.id,
         mockReq.body
       );
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Updated'
       );
     });
-    test('Should not update a story', async () => {
+    test('Should get error with unsuccessful story update', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        },
-        params: { id: '1' }
+        body: mockUpdateStoryInput,
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
       (storyService.updateStoryById as jest.Mock).mockRejectedValue(mockError);
 
       await storyController.updateStoryById(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(storyService.updateStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id),
+        mockReq.params!.id,
         mockReq.body
       );
       expect(sendResponse).not.toHaveBeenCalled();
@@ -291,43 +219,43 @@ describe('storyController tester', () => {
   });
 
   describe('storyController deleteStoryById', () => {
-    test('Should get 200 and delete a story', async () => {
+    test('Should get HttpStatusCode.OK with successful story delete', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        params: { id: '1' }
+        params: mockParamsId
       };
 
       await storyController.deleteStoryById(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(storyService.deleteStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
+        mockReq.params!.id
       );
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Deleted'
       );
     });
-    test('Should not delete a story', async () => {
+    test('Should get error with unsuccessful story delete', async () => {
       const mockReq: Partial<StoryDataRequest> = {
-        params: { id: '1' }
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
       (storyService.deleteStoryById as jest.Mock).mockRejectedValue(mockError);
 
       await storyController.deleteStoryById(
-        mockReq as Request,
+        mockReq as StoryDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(storyService.deleteStoryById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
+        mockReq.params!.id
       );
       expect(sendResponse).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalledWith(mockError);

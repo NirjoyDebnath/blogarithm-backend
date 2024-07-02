@@ -2,8 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import * as userController from '../../controllers/userController';
 import * as userService from '../../services/userService';
 import { sendResponse } from '../../utils/responses';
-import { IUserDTO } from '../../interfaces/user';
 import { AuthRequest, UserDataRequest } from '../../interfaces/auth';
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
+import {
+  mockUpdatePasswordUserInput,
+  mockUpdateUserInfo,
+  mockUser,
+  mockUserDTO
+} from '../../__mocks__/user.mock';
+import { mockParamsId, mockTokenInfo } from '../../__mocks__/auth.mock';
 
 jest.mock('./../../services/userService', () => ({
   __esModule: true,
@@ -30,37 +37,12 @@ describe('userController tester', () => {
   });
 
   describe('userController createUser', () => {
-    test('Should get 200 with the users', async () => {
+    test('Should get HttpStatusCode.OK with the users', async () => {
       const mockReq: Partial<Request> = {
-        params: { page: '1' }
+        query: { page: '1' }
       };
-      const mockUsers: IUserDTO[] = [
-        {
-          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          UserName: 'Nirjoy',
-          Email: 'Nirjoy@gmail.com',
-          Name: 'Nirjoy Debnath',
-          _links: [
-            {
-              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-              rel: 'get user',
-              type: 'GET'
-            },
-            {
-              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-              rel: 'delete user',
-              type: 'DELETE'
-            },
-            {
-              href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-              rel: 'update user',
-              type: 'UPDATE'
-            }
-          ]
-        }
-      ];
 
-      (userService.getAllUsers as jest.Mock).mockResolvedValue(mockUsers);
+      (userService.getAllUsers as jest.Mock).mockResolvedValue(mockUserDTO);
 
       await userController.getAllUsers(
         mockReq as Request,
@@ -68,18 +50,19 @@ describe('userController tester', () => {
         mockNext as NextFunction
       );
 
-      expect(userService.getAllUsers).toHaveBeenCalledWith(mockReq.params);
+      expect(userService.getAllUsers).toHaveBeenCalledWith(mockReq.query);
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Got the users',
-        mockUsers
+        mockUserDTO
       );
     });
-    test('Should not get the users', async () => {
+
+    test('Should get error with unsuccessful get users', async () => {
       const mockReq: Partial<Request> = {
-        params: { page: '1' }
+        query: { page: '1' }
       };
       const mockError: Partial<Error> = {};
 
@@ -91,42 +74,19 @@ describe('userController tester', () => {
         mockNext as NextFunction
       );
 
-      expect(userService.getAllUsers).toHaveBeenCalledWith(mockReq.params);
+      expect(userService.getAllUsers).toHaveBeenCalledWith(mockReq.query);
       expect(sendResponse).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalledWith(mockError);
     });
   });
 
   describe('userController getUserById', () => {
-    test('Should get 200 and get the user', async () => {
+    test('Should get HttpStatusCode.OK and get the user', async () => {
       const mockReq: Partial<Request> = {
-        params: { id: '1' }
-      };
-      const mockUser: IUserDTO = {
-        Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-        UserName: 'Nirjoy',
-        Email: 'Nirjoy@gmail.com',
-        Name: 'Nirjoy Debnath',
-        _links: [
-          {
-            href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-            rel: 'get user',
-            type: 'GET'
-          },
-          {
-            href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-            rel: 'delete user',
-            type: 'DELETE'
-          },
-          {
-            href: '/api/users/4818b0ec-37a0-11ef-81cc-088fc31977ac',
-            rel: 'update user',
-            type: 'UPDATE'
-          }
-        ]
+        params: { id: '4818b0ec-37a0-11ef-81cc-088fc31977ac' }
       };
 
-      (userService.getUserById as jest.Mock).mockResolvedValue(mockUser);
+      (userService.getUserById as jest.Mock).mockResolvedValue(mockUserDTO);
 
       await userController.getUserById(
         mockReq as Request,
@@ -134,20 +94,18 @@ describe('userController tester', () => {
         mockNext as NextFunction
       );
 
-      expect(userService.getUserById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
-      );
+      expect(userService.getUserById).toHaveBeenCalledWith(mockReq.params!.id);
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Got the user',
-        mockUser
+        mockUserDTO
       );
     });
-    test('Should get an error', async () => {
+    test('Should get error with unsuccessful get user', async () => {
       const mockReq: Partial<Request> = {
-        params: { id: '1' }
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
@@ -159,60 +117,53 @@ describe('userController tester', () => {
         mockNext as NextFunction
       );
 
-      expect(userService.getUserById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id)
-      );
+      expect(userService.getUserById).toHaveBeenCalledWith(mockReq.params!.id);
       expect(sendResponse).not.toHaveBeenCalled();
       expect(mockNext).toHaveBeenCalledWith(mockError);
     });
   });
 
   describe('userController updateUserById', () => {
-    test('Should get 200 and update a user', async () => {
+    test('Should get HttpStatusCode.OK with unsuccessful user update', async () => {
       const mockReq: Partial<UserDataRequest> = {
-        body: {
-          Name: 'Nirjoy Debnath'
-        },
-        params: { id: '1' }
+        body: mockUpdateUserInfo,
+        params: mockParamsId
       };
 
       await userController.updateUserById(
-        mockReq as Request,
+        mockReq as UserDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(userService.updateUserById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id),
+        mockReq.params!.id,
         mockReq.body
       );
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'User Updated'
       );
     });
-    test('Should not update a user', async () => {
+    test('Should get error with unsuccessful user update', async () => {
       const mockReq: Partial<UserDataRequest> = {
-        body: {
-          Title: 'Mock title',
-          Description: 'Mock description'
-        },
-        params: { id: '1' }
+        body: mockUpdateUserInfo,
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
       (userService.updateUserById as jest.Mock).mockRejectedValue(mockError);
 
       await userController.updateUserById(
-        mockReq as Request,
+        mockReq as UserDataRequest,
         mockRes as Response,
         mockNext as NextFunction
       );
 
       expect(userService.updateUserById).toHaveBeenCalledWith(
-        Number(mockReq.params!.id),
+        mockReq.params!.id,
         mockReq.body
       );
       expect(sendResponse).not.toHaveBeenCalled();
@@ -221,21 +172,11 @@ describe('userController tester', () => {
   });
 
   describe('authController update password', () => {
-    test('Update password should be successfull with correct old password and valid new password', async () => {
+    test('Should get HttpStatusCode.OK with unsuccessful password update', async () => {
       const mockReq: Partial<AuthRequest> = {
-        body: {
-          CurrentPassword: '123',
-          NewPassword: '1234'
-        },
-        tokenInfo: {
-          id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          userName: 'Nirjoy',
-          name: 'Nirjoy Debnath',
-          role: 0,
-          iat: 10000000000,
-          exp: 10000010000
-        },
-        params: { id: '4818b0ec-37a0-11ef-81cc-088fc31977ac' }
+        body: mockUpdatePasswordUserInput,
+        tokenInfo: mockTokenInfo,
+        params: mockParamsId
       };
 
       await userController.updatePasswordById(
@@ -252,25 +193,15 @@ describe('userController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Update password successful'
       );
     });
-    test('Update password should be unsuccessfull with incorrect old password and invalid new password', async () => {
+    test('Should get error with unsuccessful password update', async () => {
       const mockReq: Partial<AuthRequest> = {
-        body: {
-          CurrentPassword: '321',
-          NewPassword: '4321'
-        },
-        tokenInfo: {
-          id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          userName: 'Nirjoy',
-          name: 'Nirjoy Debnath',
-          role: 0,
-          iat: 10000000000,
-          exp: 10000010000
-        },
-        params: { id: '4818b0ec-37a0-11ef-81cc-088fc31977ac' }
+        body: mockUpdatePasswordUserInput,
+        tokenInfo: mockTokenInfo,
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 
@@ -295,17 +226,10 @@ describe('userController tester', () => {
   });
 
   describe('userController deleteUserById', () => {
-    test('Should get 200 and delete a user', async () => {
+    test('Should get HttpStatusCode.OK with unsuccessful user delete', async () => {
       const mockReq: Partial<UserDataRequest> = {
-        user: {
-          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          UserName: 'Nirjoy',
-          Email: 'Nirjoy@gmail.com',
-          Name: 'Nirjoy',
-          JoinDate: new Date(),
-          Role: 0
-        },
-        params: { id: '4818b0ec-37a0-11ef-81cc-088fc31977ac' }
+        user: mockUser,
+        params: mockParamsId
       };
 
       await userController.deleteUserById(
@@ -321,21 +245,14 @@ describe('userController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'User deleted'
       );
     });
-    test('Should not delete a user', async () => {
+    test('Should get error with unsuccessful user delete', async () => {
       const mockReq: Partial<UserDataRequest> = {
-        user: {
-          Id: '4818b0ec-37a0-11ef-81cc-088fc31977ac',
-          UserName: 'Nirjoy',
-          Email: 'Nirjoy@gmail.com',
-          Name: 'Nirjoy',
-          JoinDate: new Date(),
-          Role: 0
-        },
-        params: { id: '4818b0ec-37a0-11ef-81cc-088fc31977ac' }
+        user: mockUser,
+        params: mockParamsId
       };
       const mockError: Partial<Error> = {};
 

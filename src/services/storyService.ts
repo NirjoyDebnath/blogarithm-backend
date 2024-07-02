@@ -70,13 +70,19 @@ export const updateStoryById = async (
     updateStoryDTO
   );
   if (isUpdated == false) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'No such sroty');
+    throw new AppError(
+      HttpStatusCode.INTERNAL_SERVER_ERROR,
+      'Something went wrong.'
+    );
   }
 };
 
 export const deleteStoryById = async (id: string): Promise<void> => {
   const isDeleted: boolean = await storyRepository.deleteStoryById(id);
   if (isDeleted == false) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'No such story');
+    throw new AppError(
+      HttpStatusCode.INTERNAL_SERVER_ERROR,
+      'Something went wrong.'
+    );
   }
 };

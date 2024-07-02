@@ -1,4 +1,3 @@
-import { HttpStatusCode } from '../../enums/httpStatusCodes';
 import {
   IUser,
   IUpdateUserDTO,
@@ -8,7 +7,6 @@ import {
   IUpdatePasswordUserInput,
   IHATEOASLink
 } from '../../interfaces/user';
-import { AppError } from '../../utils/appError';
 
 export class UserDTO implements IUserDTO {
   Id: string;
@@ -39,17 +37,6 @@ export class UserDTO implements IUserDTO {
         type: 'UPDATE'
       }
     ];
-    this.validateData();
-  }
-  validateData() {
-    if (
-      this.Id == undefined ||
-      this.UserName == undefined ||
-      this.Name == undefined ||
-      this.Email == undefined
-    ) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }
 
@@ -62,16 +49,6 @@ export class UpdateUserDTO implements IUpdateUserDTO {
     this.UserName = newUser.UserName;
     this.Email = newUser.Email;
     this.Name = newUser.Name;
-    this.validateData();
-  }
-  validateData() {
-    if (
-      this.UserName == undefined &&
-      this.Email == undefined &&
-      this.Name == undefined
-    ) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }
 
@@ -82,11 +59,5 @@ export class UpdatePasswordUserInputDTO implements IUpdatePasswordUserInputDTO {
   constructor(updatePasswordUserInput: IUpdatePasswordUserInput) {
     this.CurrentPassword = updatePasswordUserInput.CurrentPassword;
     this.NewPassword = updatePasswordUserInput.NewPassword;
-    this.validateData();
-  }
-  validateData() {
-    if (this.CurrentPassword == undefined || this.NewPassword == undefined) {
-      throw new AppError(HttpStatusCode.BAD_REQUEST, 'Bad request');
-    }
   }
 }

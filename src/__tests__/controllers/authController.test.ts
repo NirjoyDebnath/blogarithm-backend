@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import * as authController from '../../controllers/authController';
 import * as authService from '../../services/authService';
 import { sendResponse } from '../../utils/responses';
+import { HttpStatusCode } from '../../enums/httpStatusCodes';
+import {
+  mockLogInUserInput,
+  mockSignUpUserInput
+} from '../../__mocks__/auth.mock';
 jest.mock('./../../services/authService', () => ({
   __esModule: true,
   signUp: jest.fn(),
@@ -24,14 +29,9 @@ describe('authController tester', () => {
   });
 
   describe('authController signup', () => {
-    test('Sign up should be successfull with valid imformations', async () => {
+    test('Should send HttpStatusCode.CREATED with successful signup', async () => {
       const mockReq: Partial<Request> = {
-        body: {
-          UserName: 'Nirjoy',
-          Name: 'Nirjoy Debnath',
-          Email: 'Nirjoy@gmail.com',
-          Password: '123'
-        }
+        body: mockSignUpUserInput
       };
 
       await authController.signUp(
@@ -44,11 +44,11 @@ describe('authController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.CREATED,
         'Sign up successful'
       );
     });
-    test('Sign up should be unsuccessfull with invalid imformations', async () => {
+    test('Should send an error with unsuccessful signup', async () => {
       const mockReq: Partial<Request> = {
         body: {
           UserName: 'Nirjoy',
@@ -73,12 +73,9 @@ describe('authController tester', () => {
   });
 
   describe('authController login', () => {
-    test('Log up should be successfull with valid imformations', async () => {
+    test('Should send HttpStatusCode.OK with successful login', async () => {
       const mockReq: Partial<Request> = {
-        body: {
-          UserName: 'Nirjoy',
-          Password: '123'
-        }
+        body: mockLogInUserInput
       };
       const mockToken: string = 'jwt token';
 
@@ -94,17 +91,14 @@ describe('authController tester', () => {
       expect(sendResponse).toHaveBeenCalledWith(
         mockReq,
         mockRes,
-        200,
+        HttpStatusCode.OK,
         'Log in successful',
-        mockToken
+        { token: mockToken }
       );
     });
-    test('Log up should be unsuccessfull with invalid imformations', async () => {
+    test('Should get an error with unsuccessful login', async () => {
       const mockReq: Partial<Request> = {
-        body: {
-          UserName: 'Nirjoy',
-          Password: '1234'
-        }
+        body: mockLogInUserInput
       };
       const mockError: Partial<Error> = {};
 
