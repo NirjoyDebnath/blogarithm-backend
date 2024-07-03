@@ -12,8 +12,8 @@ import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
 import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
-import { ENV } from '../config/conf';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
+import { StoryPerPage } from '../config/constants';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -35,8 +35,8 @@ export const getStories = async (
 ): Promise<IStoryDTO[]> => {
   const { AuthorId } = storyQueryParams;
   const page: number = storyQueryParams.page || 1;
-  const offset: number = Number(ENV.StoryPerPage) * (page - 1);
-  const storyPerPage: number = Number(ENV.StoryPerPage);
+  const offset: number = Number(StoryPerPage) * (page - 1);
+  const storyPerPage: number = Number(StoryPerPage);
   const stories: IStory[] = AuthorId
     ? await storyRepository.getStoriesByUserId(AuthorId, storyPerPage, offset)
     : await storyRepository.getAllStories(storyPerPage, offset);

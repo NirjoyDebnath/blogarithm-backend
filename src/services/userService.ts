@@ -13,16 +13,16 @@ import * as authRepository from '../repositories/authRepository';
 import { UpdateUserDTO, UserDTO } from './DTOs/userDTO';
 import { UpdatePasswordUserInputDTO } from './DTOs/userDTO';
 import { AppError } from '../utils/appError';
-import { ENV } from '../config/conf';
 import { getHash, isHashMatched } from '../utils/authHelper';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
+import { UserPerPage } from '../config/constants';
 
 export const getAllUsers = async (
   userQueryParams: IUserQueryParams
 ): Promise<IUserDTO[]> => {
   const page: number = userQueryParams.page || 1;
-  const offset: number = Number(ENV.UserPerPage) * (page - 1);
-  const userPerPage: number = Number(ENV.UserPerPage);
+  const offset: number = Number(UserPerPage) * (page - 1);
+  const userPerPage: number = Number(UserPerPage);
   const users: IUser[] = await userRepository.getAllUsers(userPerPage, offset);
   const usersDTO: IUserDTO[] = [];
   users.forEach((user) => {
@@ -53,12 +53,15 @@ export const updateUserById = async (
     updateUserDTO
   );
   if (!isUpdated) {
-    throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
+    throw new AppError(
+      HttpStatusCode.INTERNAL_SERVER_ERROR,
+      'Something went wrong.'
+    );
   }
 };
 
 export const updatePasswordById = async (
-  id:string,
+  id: string,
   tokenInfo: ITokenInfo,
   updatePasswordUserInput: IUpdatePasswordUserInput
 ): Promise<void> => {
@@ -85,7 +88,10 @@ export const updatePasswordById = async (
       passwordModifiedAt
     );
     if (!isUpdated) {
-      throw new AppError(HttpStatusCode.INTERNAL_SERVER_ERROR, 'Something went wrong.');
+      throw new AppError(
+        HttpStatusCode.INTERNAL_SERVER_ERROR,
+        'Something went wrong.'
+      );
     }
   } else {
     throw new AppError(HttpStatusCode.FORBIDDEN, 'Incorrect password');
