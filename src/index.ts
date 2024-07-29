@@ -4,9 +4,12 @@ import authRouter from './routes/authRoute';
 import storyRouter from './routes/storyRoute';
 import { ENV } from './config/conf';
 import { handleGlobalError } from './utils/errorHandler';
+import cors from 'cors'
 
 const app = express();
 const port = ENV.Port || 3000;
+
+app.use(cors())
 app.use(express.json({ limit: '50kb' }));
 app.use('/api/users', userRouter.router);
 app.use('/api/auth', authRouter.router);
