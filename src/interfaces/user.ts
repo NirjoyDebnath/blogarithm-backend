@@ -1,4 +1,4 @@
-import { Role } from "../enums/roles";
+import { Role } from '../enums/roles';
 interface IUserAttributes {
   Id: string;
   UserName: string;
@@ -42,4 +42,3 @@ export interface IUpdatePasswordUserInputDTO {
 export interface IUserQueryParams {
   page?: number;
 }
-
