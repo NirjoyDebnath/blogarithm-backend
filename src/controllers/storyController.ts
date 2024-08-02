@@ -15,7 +15,13 @@ export const createStory = async (
       req.body,
       req.tokenInfo!
     );
-    sendResponse(req, res, HttpStatusCode.CREATED, 'Story create successful', story);
+    sendResponse(
+      req,
+      res,
+      HttpStatusCode.CREATED,
+      'Story create successful',
+      story
+    );
   } catch (err) {
     next(err);
   }
@@ -28,7 +34,13 @@ export const getStories = async (
 ): Promise<void> => {
   try {
     const stories: IStoryDTO[] = await storyService.getStories(req.query);
-    sendResponse<IStoryDTO[]>(req, res, HttpStatusCode.OK, 'All Stories', stories);
+    sendResponse<IStoryDTO[]>(
+      req,
+      res,
+      HttpStatusCode.OK,
+      'All Stories',
+      stories
+    );
   } catch (err) {
     next(err);
   }
@@ -41,7 +53,13 @@ export const getStoryById = async (
 ): Promise<void> => {
   try {
     const story: IStoryDTO = await storyService.getStoryById(req.params.id);
-    sendResponse<IStoryDTO>(req, res, HttpStatusCode.OK, 'Got the story', story);
+    sendResponse<IStoryDTO>(
+      req,
+      res,
+      HttpStatusCode.OK,
+      'Got the story',
+      story
+    );
   } catch (err) {
     next(err);
   }
