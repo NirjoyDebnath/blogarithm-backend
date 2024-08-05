@@ -1,5 +1,5 @@
 export const UserPerPage: number = 3;
-export const StoryPerPage: number = 3;
+export const StoryPerPage: number = 12;
 export const UserNameMinLength: number = 1;
 export const UserNameMaxLength: number = 15;
 export const NameMinLength: number = 1;

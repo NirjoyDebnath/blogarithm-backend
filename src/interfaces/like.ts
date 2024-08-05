@@ -17,5 +17,6 @@ export interface IUnlikeStoryDTO {
 }
 
 export interface ILikeDTO {
+  UserId:string;
   UserName: string;
 }

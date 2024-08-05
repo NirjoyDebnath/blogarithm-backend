@@ -1,14 +1,12 @@
 import express from 'express';
-import * as authController from '../controllers/authController';
-import * as validationMiddleware from '../middlewares/validationMiddleware';
+import * as likeController from '../controllers/likeController';
+import * as authMiddleware from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
 router
-  .route('/signUp')
-  .post(validationMiddleware.validateData, authController.signUp);
-router
-  .route('/logIn')
-  .post(validationMiddleware.validateData, authController.logIn);
-
+  .route('/:id')
+  .post(authMiddleware.authenticateUser, likeController.likeStory)
+  .get(authMiddleware.authenticateUser, likeController.getLikesByStoryId)
+  .delete(authMiddleware.authenticateUser, likeController.unlikeStory);
 export default { router };

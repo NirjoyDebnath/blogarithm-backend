@@ -14,9 +14,11 @@ export class LikeStoryDTO implements ILikeStoryDTO {
 }
 
 export class LikeDTO implements ILikeDTO {
+  UserId: string;
   UserName: string;
 
   constructor(like:ILike) {
+    this.UserId = like.UserId;
     this.UserName = like.UserName;
   }
 }

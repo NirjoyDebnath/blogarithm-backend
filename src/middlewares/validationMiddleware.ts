@@ -4,6 +4,7 @@ import joi from 'joi';
 import { updateUserSchema, updatePasswordSchema } from '../schemas/userSchema';
 import { signUpUserSchema, logInUserSchema } from '../schemas/authSchema';
 import { createStorySchema, updateStorySchema } from '../schemas/storySchema';
+import { commentStorySchema } from '../schemas/commentSchema';
 
 const getSchema = (req: Request) => {
   const path: string = req.originalUrl;
@@ -22,6 +23,8 @@ const getSchema = (req: Request) => {
       return createStorySchema;
     case path.startsWith('/api/story') && method === 'PATCH':
       return updateStorySchema;
+    case path.startsWith('/api/comment') && method === 'POST':
+        return commentStorySchema;
     default:
       return joi.object();
   }

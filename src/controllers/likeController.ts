@@ -44,7 +44,7 @@ export const unlikeStory = async (
 ): Promise<void> => {
   try {
     await likeService.unlikeStory(req.params.id, req.tokenInfo!);
-    sendResponse(req, res, HttpStatusCode.CONFLICT, 'Unliked story');
+    sendResponse(req, res, HttpStatusCode.OK, 'Unliked story');
   } catch (err) {
     next(err);
   }

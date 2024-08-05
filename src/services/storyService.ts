@@ -10,10 +10,14 @@ import {
 } from '../interfaces/story';
 import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
+import * as likeRepository from '../repositories/likeRepository';
+import * as commentRepository from '../repositories/commentRepository';
 import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
 import { StoryPerPage } from '../config/constants';
+import { ILike } from '../interfaces/like';
+import { IComment } from '../interfaces/comment';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -42,9 +46,16 @@ export const getStories = async (
     : await storyRepository.getAllStories(storyPerPage, offset);
 
   const storyDTO: StoryDTO[] = [];
-  stories.forEach((story) => {
-    storyDTO.push(new StoryDTO(story));
-  });
+
+  for (let i = 0; i < stories.length; i++) {
+    const likes: ILike[] = await likeRepository.getLikesByStoryId(
+      stories[i].Id
+    );
+    const comments: IComment[] = await commentRepository.getCommentsByStoryId(
+      stories[i].Id
+    );
+    storyDTO.push(new StoryDTO(stories[i], likes, comments, false));
+  }
   if (storyDTO.length === 0) {
     throw new AppError(HttpStatusCode.NOT_FOUND, 'No stories found');
   }
@@ -56,7 +67,11 @@ export const getStoryById = async (id: string): Promise<IStoryDTO> => {
   if (!story) {
     throw new AppError(HttpStatusCode.NOT_FOUND, 'No such story');
   }
-  const storyDTO: IStoryDTO = new StoryDTO(story);
+  const likes: ILike[] = await likeRepository.getLikesByStoryId(story.Id);
+  const comments: IComment[] = await commentRepository.getCommentsByStoryId(
+    story.Id
+  );
+  const storyDTO: IStoryDTO = new StoryDTO(story, likes, comments, true);
   return storyDTO;
 };
 

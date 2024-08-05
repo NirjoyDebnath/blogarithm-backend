@@ -7,7 +7,12 @@ export const commentStory = async (
   await db('Comments').insert(commentStoryInfo);
 };
 
-export const getCommentsByStoryId = async (StoryId: string): Promise<IComment[]> => {
-  const comments: IComment[] = await db<IComment>('Comments').select('*').where(StoryId).orderBy('CreatedAt');
+export const getCommentsByStoryId = async (
+  StoryId: string
+): Promise<IComment[]> => {
+  const comments: IComment[] = await db<IComment>('Comments')
+    .select('*')
+    .where('StoryId', StoryId)
+    .orderBy('CreatedAt', 'asc');
   return comments;
 };

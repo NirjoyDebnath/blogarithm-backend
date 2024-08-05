@@ -28,8 +28,10 @@ export const unlikeStory = async (
   StoryId: string,
   tokenInfo: ITokenInfo
 ): Promise<void> => {
+  console.log("in likeservice")
   const unlikeStoryDTO:IUnlikeStoryDTO = new UnlikeStoryDTO(StoryId, tokenInfo)
   const rowEffected: number = await likeRepository.unlikeStory(unlikeStoryDTO);
+  console.log(rowEffected)
   if (rowEffected === 0) {
     throw new AppError(
       HttpStatusCode.INTERNAL_SERVER_ERROR,
