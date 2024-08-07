@@ -12,6 +12,6 @@ router
     authMiddleware.authenticateUser,
     commentController.commentStory
   )
-  .get(authMiddleware.authenticateUser, commentController.getCommentsByStoryId);
+  .get(commentController.getCommentsByStoryId);
 
 export default { router };

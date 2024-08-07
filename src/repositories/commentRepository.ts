@@ -13,6 +13,6 @@ export const getCommentsByStoryId = async (
   const comments: IComment[] = await db<IComment>('Comments')
     .select('*')
     .where('StoryId', StoryId)
-    .orderBy('CreatedAt', 'asc');
+    .orderBy('CreatedAt', 'desc');
   return comments;
 };

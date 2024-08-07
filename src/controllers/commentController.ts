@@ -3,6 +3,7 @@ import { AuthRequest } from '../interfaces/auth';
 import * as commentService from '../services/commentService';
 import { sendResponse } from '../utils/responses';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
+import { ICommentDTO } from '../interfaces/comment';
 
 export const commentStory = async (
   req: AuthRequest,
@@ -10,17 +11,8 @@ export const commentStory = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await commentService.commentStory(
-      req.params.id,
-      req.tokenInfo!,
-      req.body,
-    );
-    sendResponse(
-      req,
-      res,
-      HttpStatusCode.CREATED,
-      'Comment successful'
-    );
+    await commentService.commentStory(req.params.id, req.tokenInfo!, req.body);
+    sendResponse(req, res, HttpStatusCode.CREATED, 'Comment successful');
   } catch (err) {
     next(err);
   }
@@ -32,15 +24,10 @@ export const getCommentsByStoryId = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await commentService.getCommentsByStoryId(
-      req.params.id,
+    const comments: ICommentDTO[] = await commentService.getCommentsByStoryId(
+      req.params.id
     );
-    sendResponse(
-      req,
-      res,
-      HttpStatusCode.OK,
-      'All comments'
-    );
+    sendResponse(req, res, HttpStatusCode.OK, 'All comments', comments);
   } catch (err) {
     next(err);
   }

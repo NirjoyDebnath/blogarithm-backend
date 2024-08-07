@@ -6,7 +6,8 @@ import {
   IStory,
   IUpdateStoryInput,
   IStoryDTO,
-  IUpdateStoryDTO
+  IUpdateStoryDTO,
+  IStoriesDTO
 } from '../../interfaces/story';
 import { IHATEOASLink } from '../../interfaces/user';
 import { CommentDTO } from './commentDTO';
@@ -82,6 +83,15 @@ export class StoryDTO implements IStoryDTO {
         type: 'UPDATE'
       }
     ];
+  }
+}
+
+export class StoriesDTO implements IStoriesDTO {
+  stories: IStoryDTO[];
+  pageCount: number;
+  constructor(stories:IStoryDTO[], pageCount: number) {
+    this.stories = stories;
+    this.pageCount = pageCount;
   }
 }
 

@@ -65,10 +65,5 @@ export const logInUserSchema: joi.ObjectSchema<ILogInAuthInputType> =
         'string.min': 'The minimum length of UserName is ' + UserNameMinLength,
         'string.max': 'The maximum length of UserName is ' + UserNameMaxLength
       }),
-    Password: joi.string().pattern(PasswordPattern).required().messages({
-      'string.pattern.base':
-        'The minimum length of Password is 8 and it must contain atleast one character and one number',
-      'string.base': 'Password must be a string',
-      'any.required': 'Password is required'
-    })
+    Password: joi.string().pattern(PasswordPattern).required()
   });

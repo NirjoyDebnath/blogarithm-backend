@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as storyService from '../services/storyService';
 import { sendResponse } from '../utils/responses';
-import { ICreateStoryDTO, IStoryDTO } from '../interfaces/story';
+import { ICreateStoryDTO, IStoriesDTO, IStoryDTO } from '../interfaces/story';
 import { StoryDataRequest } from '../interfaces/auth';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
 
@@ -33,8 +33,8 @@ export const getStories = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const stories: IStoryDTO[] = await storyService.getStories(req.query);
-    sendResponse<IStoryDTO[]>(
+    const stories: IStoriesDTO = await storyService.getStories(req.query);
+    sendResponse<IStoriesDTO>(
       req,
       res,
       HttpStatusCode.OK,

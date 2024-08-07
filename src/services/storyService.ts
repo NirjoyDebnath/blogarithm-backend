@@ -6,9 +6,15 @@ import {
   IUpdateStoryInput,
   IStoryDTO,
   IUpdateStoryDTO,
-  IStoryQueryParams
+  IStoryQueryParams,
+  IStoriesDTO
 } from '../interfaces/story';
-import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
+import {
+  CreateStoryDTO,
+  StoriesDTO,
+  StoryDTO,
+  UpdateStoryDTO
+} from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
 import * as likeRepository from '../repositories/likeRepository';
 import * as commentRepository from '../repositories/commentRepository';
@@ -36,14 +42,20 @@ export const createStory = async (
 
 export const getStories = async (
   storyQueryParams: IStoryQueryParams
-): Promise<IStoryDTO[]> => {
-  const { AuthorId } = storyQueryParams;
+): Promise<IStoriesDTO> => {
+  const AuthorId = storyQueryParams.AuthorId;
+  const search = storyQueryParams.search || '';
   const page: number = storyQueryParams.page || 1;
   const offset: number = Number(StoryPerPage) * (page - 1);
   const storyPerPage: number = Number(StoryPerPage);
   const stories: IStory[] = AuthorId
-    ? await storyRepository.getStoriesByUserId(AuthorId, storyPerPage, offset)
-    : await storyRepository.getAllStories(storyPerPage, offset);
+    ? await storyRepository.getStoriesByUserId(
+        AuthorId,
+        storyPerPage,
+        offset,
+        search
+      )
+    : await storyRepository.getAllStories(storyPerPage, offset, search);
 
   const storyDTO: StoryDTO[] = [];
 
@@ -56,10 +68,18 @@ export const getStories = async (
     );
     storyDTO.push(new StoryDTO(stories[i], likes, comments, false));
   }
-  if (storyDTO.length === 0) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'No stories found');
-  }
-  return storyDTO;
+  const storyCount = AuthorId
+    ? search
+      ? await storyRepository.getSearchCountByUserId(AuthorId, search)
+      : await storyRepository.getStoryCountByUserId(AuthorId)
+    : search
+      ? await storyRepository.getSearchCount(search)
+      : await storyRepository.getStoryCount();
+  const storiesDTO = new StoriesDTO(
+    storyDTO,
+    Math.floor((storyCount + storyPerPage - 1) / storyPerPage)
+  );
+  return storiesDTO;
 };
 
 export const getStoryById = async (id: string): Promise<IStoryDTO> => {

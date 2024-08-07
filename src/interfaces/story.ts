@@ -29,6 +29,10 @@ export interface IStoryDTO extends IStoryAttributes {
   likes?: ILikeDTO[];
   _links: IHATEOASLink[];
 }
+export interface IStoriesDTO {
+  stories:IStoryDTO[];
+  pageCount:number;
+}
 export interface IUpdateStoryDTO {
   Title?: string;
   Description?: string;
@@ -36,5 +40,6 @@ export interface IUpdateStoryDTO {
 
 export interface IStoryQueryParams {
   AuthorId?: string;
+  search?: string;
   page?: number;
 }
