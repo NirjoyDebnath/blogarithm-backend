@@ -12,6 +12,7 @@ export const authenticateUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log(req.body)
     const token: string | undefined = req.headers.authorization?.split(' ')[1];
     if (!token) {
       return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));

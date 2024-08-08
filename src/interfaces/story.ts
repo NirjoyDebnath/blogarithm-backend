@@ -1,3 +1,5 @@
+import { ICommentDTO } from './comment';
+import { ILikeDTO } from './like';
 import { IHATEOASLink } from './user';
 
 interface IStoryAttributes {
@@ -6,12 +8,14 @@ interface IStoryAttributes {
   Title: string;
   Description: string;
   AuthorUserName: string;
+  CreatedAt: Date;
 }
 
 export interface IStory extends IStoryAttributes {}
 export interface ICreateStoryInput
   extends Pick<IStoryAttributes, 'Title' | 'Description'> {}
-export interface ICreateStoryInfo extends Omit<IStoryAttributes, 'Id'> {}
+export interface ICreateStoryInfo
+  extends Omit<IStoryAttributes, 'Id' | 'CreatedAt'> {}
 export interface IUpdateStoryInput {
   Title?: string;
   Description?: string;
@@ -19,6 +23,10 @@ export interface IUpdateStoryInput {
 
 export interface ICreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
 export interface IStoryDTO extends IStoryAttributes {
+  commentCount:number;
+  comments?:ICommentDTO[];
+  userLiked: boolean;
+  likes?: ILikeDTO[];
   _links: IHATEOASLink[];
 }
 export interface IUpdateStoryDTO {

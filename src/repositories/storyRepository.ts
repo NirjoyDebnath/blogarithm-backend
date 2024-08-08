@@ -14,7 +14,8 @@ export const getAllStories = async (
   const stories: IStory[] = await db<IStory>('Stories')
     .select('*')
     .limit(storyPerPage)
-    .offset(offset);
+    .offset(offset)
+    .orderBy('CreatedAt', 'desc');
   return stories;
 };
 
@@ -35,7 +36,8 @@ export const getStoriesByUserId = async (
     .select('*')
     .where('AuthorId', AuthorId)
     .limit(storyPerPage)
-    .offset(offset);
+    .offset(offset)
+    .groupBy('CreatedAt');
   return stories;
 };
 

@@ -13,7 +13,13 @@ export const getAllUsers = async (
 ): Promise<void> => {
   try {
     const usersDTO: IUserDTO[] = await userService.getAllUsers(req.query);
-    sendResponse<IUserDTO[]>(req, res, HttpStatusCode.OK, 'Got the users', usersDTO);
+    sendResponse<IUserDTO[]>(
+      req,
+      res,
+      HttpStatusCode.OK,
+      'Got the users',
+      usersDTO
+    );
   } catch (err) {
     next(err);
   }
@@ -26,7 +32,13 @@ export const getUserById = async (
 ): Promise<void> => {
   try {
     const userDTO: IUserDTO = await userService.getUserById(req.params.id);
-    sendResponse<IUserDTO>(req, res, HttpStatusCode.OK, 'Got the user', userDTO);
+    sendResponse<IUserDTO>(
+      req,
+      res,
+      HttpStatusCode.OK,
+      'Got the user',
+      userDTO
+    );
   } catch (err) {
     next(err);
   }
@@ -64,8 +76,17 @@ export const updatePasswordById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await userService.updatePasswordById(req.params.id, req.tokenInfo!, req.body);
-    sendResponse<string>(req, res, HttpStatusCode.OK, 'Update password successful');
+    await userService.updatePasswordById(
+      req.params.id,
+      req.tokenInfo!,
+      req.body
+    );
+    sendResponse<string>(
+      req,
+      res,
+      HttpStatusCode.OK,
+      'Update password successful'
+    );
   } catch (err) {
     next(err);
   }
