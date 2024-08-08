@@ -7,13 +7,15 @@ export const commentStory = async (
   StoryId: string,
   tokenInfo: ITokenInfo,
   commentStoryInput: ICommentStoryInput
-): Promise<void> => {
+): Promise<ICommentDTO> => {
   const commentStoryDTO: ICommentStoryDTO = new CommentStoryDTO(
     StoryId,
     tokenInfo,
     commentStoryInput
   );
+  const comment: ICommentDTO = new CommentDTO(commentStoryDTO);
   await commentRepository.commentStory(commentStoryDTO);
+  return comment;
 };
 
 export const getCommentsByStoryId = async (StoryId: string): Promise<ICommentDTO[]> => {

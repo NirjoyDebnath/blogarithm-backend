@@ -25,7 +25,6 @@ export interface ICreateStoryDTO extends Omit<IStoryAttributes, 'Id'> {}
 export interface IStoryDTO extends IStoryAttributes {
   commentCount:number;
   comments?:ICommentDTO[];
-  userLiked: boolean;
   likes?: ILikeDTO[];
   _links: IHATEOASLink[];
 }

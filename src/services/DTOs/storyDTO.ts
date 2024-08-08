@@ -38,7 +38,6 @@ export class StoryDTO implements IStoryDTO {
   CreatedAt: Date;
   commentCount: number;
   comments?: ICommentDTO[] | undefined;
-  userLiked: boolean;
   likes: ILikeDTO[];
   _links: IHATEOASLink[];
 
@@ -55,10 +54,8 @@ export class StoryDTO implements IStoryDTO {
     this.AuthorUserName = story.AuthorUserName;
     this.CreatedAt = story.CreatedAt;
     this.likes = [];
-    this.userLiked = false;
     likes.forEach((like) => {
       this.likes?.push(new LikeDTO(like));
-      if (story.AuthorId === like.UserId) this.userLiked = true;
     });
     this.commentCount = comments.length;
     if (sendComments) {

@@ -11,8 +11,8 @@ export const commentStory = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    await commentService.commentStory(req.params.id, req.tokenInfo!, req.body);
-    sendResponse(req, res, HttpStatusCode.CREATED, 'Comment successful');
+    const comment:ICommentDTO = await commentService.commentStory(req.params.id, req.tokenInfo!, req.body);
+    sendResponse(req, res, HttpStatusCode.CREATED, 'Comment successful', comment);
   } catch (err) {
     next(err);
   }

@@ -29,7 +29,7 @@ export const getAllUsers = async (
     usersDTO.push(new UserDTO(user));
   });
   if (usersDTO.length === 0) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Users Not Found');
   }
   return usersDTO;
 };
@@ -37,7 +37,7 @@ export const getAllUsers = async (
 export const getUserById = async (id: string): Promise<IUserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
   if (!user) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'User Not Found');
   }
   const userDTO: IUserDTO = new UserDTO(user);
   return userDTO;

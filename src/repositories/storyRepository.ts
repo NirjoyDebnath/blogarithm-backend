@@ -23,6 +23,9 @@ export const getAllStories = async (
         '%" or Description like ' +
         '"%' +
         search +
+        '%" or AuthorUserName like ' +
+        '"%' +
+        search +
         '%"'
     )
     .orderBy('CreatedAt', 'desc');
@@ -51,15 +54,21 @@ export const getSearchCount = async (search: string): Promise<number> => {
         '%" or Description like ' +
         '"%' +
         search +
+        '%" or AuthorUserName like ' +
+        '"%' +
+        search +
         '%"'
-    )
+    );
   return Number(count.count);
 };
 
-export const getSearchCountByUserId = async (id: string, search: string): Promise<number> => {
+export const getSearchCountByUserId = async (
+  id: string,
+  search: string
+): Promise<number> => {
   const [count] = await db<IStory>('Stories')
     .count('Id', { as: 'count' })
-    .where('AuthorId', id)
+    .whereRaw('AuthorId = ?', [id])
     .whereRaw(
       'Title like ' +
         '"%' +
@@ -67,8 +76,11 @@ export const getSearchCountByUserId = async (id: string, search: string): Promis
         '%" or Description like ' +
         '"%' +
         search +
+        '%" or AuthorUserName like ' +
+        '"%' +
+        search +
         '%"'
-    )
+    );
   return Number(count.count);
 };
 
@@ -88,18 +100,12 @@ export const getStoriesByUserId = async (
 ): Promise<IStory[]> => {
   const stories: IStory[] = await db<IStory>('Stories')
     .select('*')
-    .where('AuthorId', AuthorId)
+    .whereRaw('AuthorId = ?', [AuthorId])
+    .andWhereRaw('Title like ' + '"%' + search + '%"')
+    .andWhereRaw('Description like ' + '"%' + search + '%"')
     .limit(storyPerPage)
     .offset(offset)
-    .whereRaw(
-      'Title like ' +
-        '"%' +
-        search +
-        '%" or Description like ' +
-        '"%' +
-        search +
-        '%"'
-    )
+
     .orderBy('CreatedAt', 'desc');
   return stories;
 };

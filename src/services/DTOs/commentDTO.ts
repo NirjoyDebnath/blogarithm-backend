@@ -28,7 +28,7 @@ export class CommentDTO implements ICommentDTO {
   CreatedAt: Date;
 
   constructor(
-    comment:IComment
+    comment:IComment|ICommentStoryDTO
   ) {
     this.UserId = comment.UserId;
     this.UserName = comment.UserName;
