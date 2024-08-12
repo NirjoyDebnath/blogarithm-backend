@@ -34,6 +34,4 @@ const connectToDatabase: knexDatabaseConnectionObjectType = {
   }
 };
 
-console.log(connectToDatabase);
-
 export default connectToDatabase;
