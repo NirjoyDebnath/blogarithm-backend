@@ -23,7 +23,9 @@ export const logIn = async (
 ): Promise<void> => {
   try {
     const token: string = await authService.logIn(req.body);
-    sendResponse<object>(req, res, HttpStatusCode.OK, 'Log in successful', { token: token });
+    sendResponse<object>(req, res, HttpStatusCode.OK, 'Log in successful', {
+      token: token
+    });
   } catch (err) {
     next(err);
   }

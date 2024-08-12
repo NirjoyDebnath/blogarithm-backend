@@ -64,7 +64,7 @@ describe('authService tester', () => {
         (authRepository.logIn as jest.Mock).mockResolvedValue(undefined);
 
         await expect(authService.logIn(mockLogInUserInput)).rejects.toThrow(
-          new AppError(HttpStatusCode.BAD_REQUEST, 'Invalid username')
+          new AppError(HttpStatusCode.BAD_REQUEST, 'Incorrect Username or Password')
         );
 
         expect(authRepository.logIn).toHaveBeenCalled();
@@ -75,7 +75,7 @@ describe('authService tester', () => {
         (isHashMatched as jest.Mock).mockResolvedValue(false);
 
         await expect(authService.logIn(mockLogInUserInput)).rejects.toThrow(
-          new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect password')
+          new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect Username or Password')
         );
 
         expect(authRepository.logIn).toHaveBeenCalled();

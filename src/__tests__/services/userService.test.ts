@@ -67,7 +67,7 @@ describe('userService tester', () => {
 
       await expect(
         userService.getAllUsers(mockUserQueryParams)
-      ).rejects.toThrow(new AppError(HttpStatusCode.NOT_FOUND, 'Not Found'));
+      ).rejects.toThrow(new AppError(HttpStatusCode.NOT_FOUND, 'Users Not Found'));
       expect(userRepository.getAllUsers).toHaveBeenCalled();
     });
   });
@@ -85,7 +85,7 @@ describe('userService tester', () => {
       (userRepository.getUserById as jest.Mock).mockResolvedValue(undefined);
 
       await expect(userService.getUserById(mockId)).rejects.toThrow(
-        new AppError(HttpStatusCode.NOT_FOUND, 'Not Found')
+        new AppError(HttpStatusCode.NOT_FOUND, 'User Not Found')
       );
       expect(userRepository.getUserById).toHaveBeenCalled();
     });

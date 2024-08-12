@@ -6,14 +6,24 @@ import {
   IUpdateStoryInput,
   IStoryDTO,
   IUpdateStoryDTO,
-  IStoryQueryParams
+  IStoryQueryParams,
+  IStoriesDTO
 } from '../interfaces/story';
-import { CreateStoryDTO, StoryDTO, UpdateStoryDTO } from './DTOs/storyDTO';
+import {
+  CreateStoryDTO,
+  StoriesDTO,
+  StoryDTO,
+  UpdateStoryDTO
+} from './DTOs/storyDTO';
 import * as storyRepository from '../repositories/storyRepository';
+import * as likeRepository from '../repositories/likeRepository';
+import * as commentRepository from '../repositories/commentRepository';
 import { ITokenInfo } from '../interfaces/auth';
 import { AppError } from '../utils/appError';
-import { ENV } from '../config/conf';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
+import { StoryPerPage } from '../config/constants';
+import { ILike } from '../interfaces/like';
+import { IComment } from '../interfaces/comment';
 
 export const createStory = async (
   createStoryInput: ICreateStoryInput,
@@ -32,23 +42,44 @@ export const createStory = async (
 
 export const getStories = async (
   storyQueryParams: IStoryQueryParams
-): Promise<IStoryDTO[]> => {
-  const { AuthorId } = storyQueryParams;
+): Promise<IStoriesDTO> => {
+  const AuthorId = storyQueryParams.AuthorId;
+  const search = storyQueryParams.search || '';
   const page: number = storyQueryParams.page || 1;
-  const offset: number = Number(ENV.StoryPerPage) * (page - 1);
-  const storyPerPage: number = Number(ENV.StoryPerPage);
+  const offset: number = Number(StoryPerPage) * (page - 1);
+  const storyPerPage: number = Number(StoryPerPage);
   const stories: IStory[] = AuthorId
-    ? await storyRepository.getStoriesByUserId(AuthorId, storyPerPage, offset)
-    : await storyRepository.getAllStories(storyPerPage, offset);
+    ? await storyRepository.getStoriesByUserId(
+        AuthorId,
+        storyPerPage,
+        offset,
+        search
+      )
+    : await storyRepository.getAllStories(storyPerPage, offset, search);
 
   const storyDTO: StoryDTO[] = [];
-  stories.forEach((story) => {
-    storyDTO.push(new StoryDTO(story));
-  });
-  if (storyDTO.length === 0) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'No stories found');
+
+  for (let i = 0; i < stories.length; i++) {
+    const likes: ILike[] = await likeRepository.getLikesByStoryId(
+      stories[i].Id
+    );
+    const comments: IComment[] = await commentRepository.getCommentsByStoryId(
+      stories[i].Id
+    );
+    storyDTO.push(new StoryDTO(stories[i], likes, comments, false));
   }
-  return storyDTO;
+  const storyCount: number = AuthorId
+    ? search
+      ? await storyRepository.getSearchCountByUserId(AuthorId, search)
+      : await storyRepository.getStoryCountByUserId(AuthorId)
+    : search
+      ? await storyRepository.getSearchCount(search)
+      : await storyRepository.getStoryCount();
+  const storiesDTO = new StoriesDTO(
+    storyDTO,
+    Math.floor((storyCount + storyPerPage - 1) / storyPerPage)
+  );
+  return storiesDTO;
 };
 
 export const getStoryById = async (id: string): Promise<IStoryDTO> => {
@@ -56,7 +87,11 @@ export const getStoryById = async (id: string): Promise<IStoryDTO> => {
   if (!story) {
     throw new AppError(HttpStatusCode.NOT_FOUND, 'No such story');
   }
-  const storyDTO: IStoryDTO = new StoryDTO(story);
+  const likes: ILike[] = await likeRepository.getLikesByStoryId(story.Id);
+  const comments: IComment[] = await commentRepository.getCommentsByStoryId(
+    story.Id
+  );
+  const storyDTO: IStoryDTO = new StoryDTO(story, likes, comments, true);
   return storyDTO;
 };
 

@@ -12,6 +12,7 @@ export const authenticateUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log(req.body)
     const token: string | undefined = req.headers.authorization?.split(' ')[1];
     if (!token) {
       return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
@@ -30,6 +31,7 @@ export const authenticateUser = async (
     const passwordModifiedAtInSecond: number =
       auth.PasswordModifiedAt.getTime() / 1000;
     if (passwordModifiedAtInSecond > tokenInfo.iat) {
+      console.log("1 ",passwordModifiedAtInSecond,"2 ", tokenInfo.iat)
       return next(new AppError(HttpStatusCode.UNAUTHORIZED, 'You are not authorized'));
     }
     req.tokenInfo = tokenInfo;

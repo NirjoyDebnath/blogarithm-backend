@@ -10,12 +10,12 @@ export const signUp = async (
 ): Promise<IUser> => {
   const trx: Knex.Transaction = await db.transaction();
   try {
-    await trx('Users').insert(signUpUserInfo);
-    const user = await trx<IUser>('Users')
+    await trx('users').insert(signUpUserInfo);
+    const user = await trx<IUser>('users')
       .select('*')
       .where('UserName', signUpUserInfo.UserName)
       .first();
-    await trx('Auth').insert({ UserId: user!.Id, ...signUpAuthInfo });
+    await trx('auth').insert({ UserId: user!.Id, ...signUpAuthInfo });
 
     await trx.commit();
     return user!;

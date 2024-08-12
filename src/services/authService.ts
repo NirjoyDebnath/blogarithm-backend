@@ -31,7 +31,7 @@ export const logIn = async (
   const auth: IAuth | undefined = await authRepository.logIn(logInDTO);
 
   if (!auth) {
-    throw new AppError(HttpStatusCode.BAD_REQUEST, 'Invalid username');
+    throw new AppError(HttpStatusCode.BAD_REQUEST, 'Incorrect Username or Password');
   } else {
     const { UserId, Password } = auth;
     const isPasswordMatched: boolean = await isHashMatched(
@@ -48,7 +48,7 @@ export const logIn = async (
       const token: string = await getToken(user);
       return token;
     } else {
-      throw new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect password');
+      throw new AppError(HttpStatusCode.UNAUTHORIZED, 'Incorrect Username or Password');
     }
   }
 };

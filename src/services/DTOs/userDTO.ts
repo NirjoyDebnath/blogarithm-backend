@@ -5,7 +5,7 @@ import {
   IUpdateUserInput,
   IUpdatePasswordUserInputDTO,
   IUpdatePasswordUserInput,
-  IHATEOASLink
+  IHATEOASLink,
 } from '../../interfaces/user';
 
 export class UserDTO implements IUserDTO {

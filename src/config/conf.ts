@@ -13,7 +13,5 @@ export const ENV = {
   DatabaseDatabase: process.env.DatabaseDatabase,
   Environment: process.env.Environment,
   SecretKey: process.env.SecretKey,
-  JwtTokenExpire: process.env.JwtTokenExpire,
-  UserPerPage: process.env.UserPerPage,
-  StoryPerPage: process.env.StoryPerPage
+  JwtTokenExpire: process.env.JwtTokenExpire
 };

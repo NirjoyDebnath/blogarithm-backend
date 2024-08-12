@@ -5,7 +5,7 @@ import {
   IUpdateUserDTO,
   IUserQueryParams,
   IUpdatePasswordUserInput,
-  IUpdatePasswordUserInputDTO
+  IUpdatePasswordUserInputDTO,
 } from '../interfaces/user';
 import { IAuth, ITokenInfo } from '../interfaces/auth';
 import * as userRepository from '../repositories/userRepository';
@@ -13,23 +13,23 @@ import * as authRepository from '../repositories/authRepository';
 import { UpdateUserDTO, UserDTO } from './DTOs/userDTO';
 import { UpdatePasswordUserInputDTO } from './DTOs/userDTO';
 import { AppError } from '../utils/appError';
-import { ENV } from '../config/conf';
 import { getHash, isHashMatched } from '../utils/authHelper';
 import { HttpStatusCode } from '../enums/httpStatusCodes';
+import { UserPerPage } from '../config/constants';
 
 export const getAllUsers = async (
   userQueryParams: IUserQueryParams
 ): Promise<IUserDTO[]> => {
   const page: number = userQueryParams.page || 1;
-  const offset: number = Number(ENV.UserPerPage) * (page - 1);
-  const userPerPage: number = Number(ENV.UserPerPage);
+  const offset: number = Number(UserPerPage) * (page - 1);
+  const userPerPage: number = Number(UserPerPage);
   const users: IUser[] = await userRepository.getAllUsers(userPerPage, offset);
   const usersDTO: IUserDTO[] = [];
   users.forEach((user) => {
     usersDTO.push(new UserDTO(user));
   });
   if (usersDTO.length === 0) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'Users Not Found');
   }
   return usersDTO;
 };
@@ -37,7 +37,7 @@ export const getAllUsers = async (
 export const getUserById = async (id: string): Promise<IUserDTO> => {
   const user: IUser | undefined = await userRepository.getUserById(id);
   if (!user) {
-    throw new AppError(HttpStatusCode.NOT_FOUND, 'Not Found');
+    throw new AppError(HttpStatusCode.NOT_FOUND, 'User Not Found');
   }
   const userDTO: IUserDTO = new UserDTO(user);
   return userDTO;
