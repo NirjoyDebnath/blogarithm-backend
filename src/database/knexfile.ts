@@ -18,7 +18,22 @@ const connectToDatabase: knexDatabaseConnectionObjectType = {
     migrations: {
       tableName: 'knex_migrations'
     }
+  },
+  production: {
+    client: 'mysql2',
+    connection: {
+      host: ENV.DatabaseHost || 'localhost',
+      port: Number(ENV.DatabasePort) || 3306,
+      user: ENV.DatabaseUser || 'root',
+      password: ENV.DatabasePassword || 'Sample',
+      database: ENV.DatabaseDatabase || 'DBblogarithm'
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
   }
 };
+
+console.log(connectToDatabase);
 
 export default connectToDatabase;

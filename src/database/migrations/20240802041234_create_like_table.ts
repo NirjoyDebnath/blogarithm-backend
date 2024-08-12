@@ -1,7 +1,7 @@
 import type { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('Likes', function (table) {
+  await knex.schema.createTable('likes', function (table) {
     table.uuid('Id').primary().unique().defaultTo(knex.fn.uuid());
     table.uuid('UserId').notNullable();
     table.uuid('StoryId').notNullable();
@@ -9,13 +9,13 @@ export async function up(knex: Knex): Promise<void> {
     table
       .foreign('UserId')
       .references('Id')
-      .inTable('Users')
+      .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
     table
       .foreign('StoryId')
       .references('Id')
-      .inTable('Stories')
+      .inTable('stories')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
     table.unique(['UserId', 'StoryId']);
@@ -23,5 +23,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTableIfExists('Likes');
+  await knex.schema.dropTableIfExists('likes');
 }

@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table
       .foreign('UserId')
       .references('Id')
-      .inTable('Users')
+      .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
   });
