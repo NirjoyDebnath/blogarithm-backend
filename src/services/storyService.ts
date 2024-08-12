@@ -68,7 +68,7 @@ export const getStories = async (
     );
     storyDTO.push(new StoryDTO(stories[i], likes, comments, false));
   }
-  const storyCount = AuthorId
+  const storyCount: number = AuthorId
     ? search
       ? await storyRepository.getSearchCountByUserId(AuthorId, search)
       : await storyRepository.getStoryCountByUserId(AuthorId)

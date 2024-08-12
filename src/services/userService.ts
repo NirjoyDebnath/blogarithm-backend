@@ -5,7 +5,7 @@ import {
   IUpdateUserDTO,
   IUserQueryParams,
   IUpdatePasswordUserInput,
-  IUpdatePasswordUserInputDTO
+  IUpdatePasswordUserInputDTO,
 } from '../interfaces/user';
 import { IAuth, ITokenInfo } from '../interfaces/auth';
 import * as userRepository from '../repositories/userRepository';

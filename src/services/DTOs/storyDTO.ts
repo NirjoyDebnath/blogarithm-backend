@@ -54,14 +54,15 @@ export class StoryDTO implements IStoryDTO {
     this.AuthorUserName = story.AuthorUserName;
     this.CreatedAt = story.CreatedAt;
     this.likes = [];
-    likes.forEach((like) => {
-      this.likes?.push(new LikeDTO(like));
-    });
+    for (let i = 0; i < likes.length; i++) {
+      this.likes.push(new LikeDTO(likes[i]));
+    }
     this.commentCount = comments.length;
     if (sendComments) {
-      comments.forEach((comment) => {
-        this.comments?.push(new CommentDTO(comment));
-      });
+      this.comments = [];
+      for (let i = 0; i < comments.length; i++) {
+        this.comments.push(new CommentDTO(comments[i]));
+      }
     }
     this._links = [
       {
@@ -86,7 +87,7 @@ export class StoryDTO implements IStoryDTO {
 export class StoriesDTO implements IStoriesDTO {
   stories: IStoryDTO[];
   pageCount: number;
-  constructor(stories:IStoryDTO[], pageCount: number) {
+  constructor(stories: IStoryDTO[], pageCount: number) {
     this.stories = stories;
     this.pageCount = pageCount;
   }

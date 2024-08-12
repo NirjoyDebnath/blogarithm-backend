@@ -65,5 +65,5 @@ export const logInUserSchema: joi.ObjectSchema<ILogInAuthInputType> =
         'string.min': 'The minimum length of UserName is ' + UserNameMinLength,
         'string.max': 'The maximum length of UserName is ' + UserNameMaxLength
       }),
-    Password: joi.string().pattern(PasswordPattern).required()
+    Password: joi.string().pattern(PasswordPattern,).required().messages({'string.pattern.base':"Incorrect username or password"})
   });
