@@ -54,16 +54,9 @@ export const logInUserSchema: joi.ObjectSchema<ILogInAuthInputType> =
   joi.object<ILogInAuthInputType>({
     UserName: joi
       .string()
-      .alphanum()
-      .min(1)
-      .max(15)
-      .required()
-      .messages({
-        'string.alphanum': 'UserName must only contain characters and numbers',
-        'string.base': 'UserName must be a string',
-        'any.required': 'UserName is required',
-        'string.min': 'The minimum length of UserName is ' + UserNameMinLength,
-        'string.max': 'The maximum length of UserName is ' + UserNameMaxLength
-      }),
+      // .alphanum()
+      // .min(1)
+      // .max(15)
+      .required(),
     Password: joi.string().pattern(PasswordPattern,).required().messages({'string.pattern.base':"Incorrect username or password"})
   });

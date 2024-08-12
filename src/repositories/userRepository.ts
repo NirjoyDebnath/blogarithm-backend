@@ -5,7 +5,7 @@ export const getAllUsers = async (
   userPerPage: number,
   offset: number
 ): Promise<IUser[]> => {
-  const users: IUser[] = await db<IUser>('Users')
+  const users: IUser[] = await db<IUser>('users')
     .select('*')
     .limit(userPerPage)
     .offset(offset);
@@ -13,7 +13,7 @@ export const getAllUsers = async (
 };
 
 export const getUserById = async (id: string): Promise<IUser | undefined> => {
-  const user: IUser | undefined = await db<IUser>('Users')
+  const user: IUser | undefined = await db<IUser>('users')
     .select('*')
     .where('Id', id)
     .first();
@@ -48,8 +48,8 @@ export const deleteUserById = async (
   const trx = await db.transaction();
 
   try {
-    await trx('Users').where('Id', id).del();
-    await trx('Auth').where('UserName', userName).del();
+    await trx('users').where('Id', id).del();
+    await trx('auth').where('UserName', userName).del();
     await trx.commit();
     return true;
   } catch (err) {

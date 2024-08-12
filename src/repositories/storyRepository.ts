@@ -4,7 +4,7 @@ import db from '../database/db';
 export const createStory = async (
   createStoryDTO: ICreateStoryDTO
 ): Promise<void> => {
-  await db('Stories').insert(createStoryDTO);
+  await db('stories').insert(createStoryDTO);
 };
 
 export const getAllStories = async (
@@ -12,7 +12,7 @@ export const getAllStories = async (
   offset: number,
   search: string
 ): Promise<IStory[]> => {
-  const stories: IStory[] = await db<IStory>('Stories')
+  const stories: IStory[] = await db<IStory>('stories')
     .select('*')
     .limit(storyPerPage)
     .offset(offset)
@@ -33,19 +33,19 @@ export const getAllStories = async (
 };
 
 export const getStoryCount = async (): Promise<number> => {
-  const [count] = await db<IStory>('Stories').count('Id', { as: 'count' });
+  const [count] = await db<IStory>('stories').count('Id', { as: 'count' });
   return Number(count.count);
 };
 
 export const getStoryCountByUserId = async (id: string): Promise<number> => {
-  const [count] = await db<IStory>('Stories')
+  const [count] = await db<IStory>('stories')
     .count('Id', { as: 'count' })
     .where('AuthorId', id);
   return Number(count.count);
 };
 
 export const getSearchCount = async (search: string): Promise<number> => {
-  const [count] = await db<IStory>('Stories')
+  const [count] = await db<IStory>('stories')
     .count('Id', { as: 'count' })
     .whereRaw(
       'Title like ' +
@@ -66,7 +66,7 @@ export const getSearchCountByUserId = async (
   id: string,
   search: string
 ): Promise<number> => {
-  const [count] = await db<IStory>('Stories')
+  const [count] = await db<IStory>('stories')
     .count('Id', { as: 'count' })
     .whereRaw('AuthorId = ?', [id])
     .whereRaw(
@@ -85,7 +85,7 @@ export const getSearchCountByUserId = async (
 };
 
 export const getStoryById = async (id: string): Promise<IStory | undefined> => {
-  const story: IStory | undefined = await db<IStory>('Stories')
+  const story: IStory | undefined = await db<IStory>('stories')
     .select('*')
     .where('Id', id)
     .first();
@@ -98,7 +98,7 @@ export const getStoriesByUserId = async (
   offset: number,
   search: string
 ): Promise<IStory[]> => {
-  const stories: IStory[] = await db<IStory>('Stories')
+  const stories: IStory[] = await db<IStory>('stories')
     .select('*')
     .whereRaw('AuthorId = ?', [AuthorId])
     .andWhereRaw('Title like ' + '"%' + search + '%"')
@@ -114,13 +114,13 @@ export const updateStoryById = async (
   id: string,
   updateStoryDTO: IUpdateStoryDTO
 ): Promise<boolean> => {
-  const isUpdated: boolean = await db('Stories')
+  const isUpdated: boolean = await db('stories')
     .where('Id', id)
     .update(updateStoryDTO);
   return isUpdated;
 };
 
 export const deleteStoryById = async (id: string): Promise<boolean> => {
-  const isDeleted: boolean = await db('Stories').where('Id', id).del();
+  const isDeleted: boolean = await db('stories').where('Id', id).del();
   return isDeleted;
 };
