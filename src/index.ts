@@ -6,7 +6,7 @@ import likeRouter from './routes/likeRoute';
 import commentRouter from './routes/commentRoute';
 import { ENV } from './config/conf';
 import { handleGlobalError } from './utils/errorHandler';
-import cors from 'cors'
+import cors from 'cors';
 
 const app = express();
 const port = ENV.Port || 3000;
@@ -22,5 +22,8 @@ app.use(handleGlobalError);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log('Server connected at ' + port + ' ' + process.env.port);
+  console.log(
+    'Server connected at ' + port + ' ' + process.env.port,
+    process.env.Environment
+  );
 });

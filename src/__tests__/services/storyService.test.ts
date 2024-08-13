@@ -7,8 +7,6 @@ import {
   mockCreateStoryInput,
   mockStory,
   mockStoryDTO,
-  mockStoryQueryNoParams,
-  mockStoryQueryParams,
   mockStoryQueryParamsAuthor,
   mockStoryQueryParamspage,
   mockStoryQueryParamsSearch,
@@ -40,12 +38,14 @@ jest.mock('./../../repositories/likeRepository', () => ({
   __esModule: true,
   likeStory: jest.fn(),
   getLikesByStoryId: jest.fn(),
+  getLikesByStoryIds: jest.fn(),
   unlikeStory: jest.fn()
 }));
 jest.mock('./../../repositories/commentRepository', () => ({
   __esModule: true,
   commentStory: jest.fn(),
-  getCommentsByStoryId: jest.fn()
+  getCommentsByStoryId: jest.fn(),
+  getCommentsByStoryIds: jest.fn()
 }));
 
 jest.mock('./../../utils/authHelper', () => ({
@@ -75,14 +75,13 @@ describe('storyService tester', () => {
       (storyRepository.getAllStories as jest.Mock).mockResolvedValue([
         mockStory
       ]);
-      for (let i = 0; i < [mockStory].length; i++) {
-        (likeRepository.getLikesByStoryId as jest.Mock).mockResolvedValue(
-          mockLikes
-        );
-        (commentRepository.getCommentsByStoryId as jest.Mock).mockResolvedValue(
-          mockComments
-        );
-      }
+
+      (likeRepository.getLikesByStoryIds as jest.Mock).mockResolvedValue(
+        mockLikes
+      );
+      (commentRepository.getCommentsByStoryIds as jest.Mock).mockResolvedValue(
+        mockComments
+      );
 
       (storyRepository.getStoryCount as jest.Mock).mockResolvedValue(1);
 
@@ -96,14 +95,13 @@ describe('storyService tester', () => {
       (storyRepository.getAllStories as jest.Mock).mockResolvedValue([
         mockStory
       ]);
-      for (let i = 0; i < [mockStory].length; i++) {
-        (likeRepository.getLikesByStoryId as jest.Mock).mockResolvedValue(
-          mockLikes
-        );
-        (commentRepository.getCommentsByStoryId as jest.Mock).mockResolvedValue(
-          mockComments
-        );
-      }
+
+      (likeRepository.getLikesByStoryIds as jest.Mock).mockResolvedValue(
+        mockLikes
+      );
+      (commentRepository.getCommentsByStoryIds as jest.Mock).mockResolvedValue(
+        mockComments
+      );
 
       (storyRepository.getStoryCount as jest.Mock).mockResolvedValue(1);
 
@@ -119,14 +117,13 @@ describe('storyService tester', () => {
       (storyRepository.getAllStories as jest.Mock).mockResolvedValue([
         mockStory
       ]);
-      for (let i = 0; i < [mockStory].length; i++) {
-        (likeRepository.getLikesByStoryId as jest.Mock).mockResolvedValue(
-          mockLikes
-        );
-        (commentRepository.getCommentsByStoryId as jest.Mock).mockResolvedValue(
-          mockComments
-        );
-      }
+
+      (likeRepository.getLikesByStoryIds as jest.Mock).mockResolvedValue(
+        mockLikes
+      );
+      (commentRepository.getCommentsByStoryIds as jest.Mock).mockResolvedValue(
+        mockComments
+      );
 
       (storyRepository.getSearchCount as jest.Mock).mockResolvedValue(1);
 
@@ -142,14 +139,13 @@ describe('storyService tester', () => {
       (storyRepository.getStoriesByUserId as jest.Mock).mockResolvedValue([
         mockStory
       ]);
-      for (let i = 0; i < [mockStory].length; i++) {
-        (likeRepository.getLikesByStoryId as jest.Mock).mockResolvedValue(
-          mockLikes
-        );
-        (commentRepository.getCommentsByStoryId as jest.Mock).mockResolvedValue(
-          mockComments
-        );
-      }
+
+      (likeRepository.getLikesByStoryIds as jest.Mock).mockResolvedValue(
+        mockLikes
+      );
+      (commentRepository.getCommentsByStoryIds as jest.Mock).mockResolvedValue(
+        mockComments
+      );
 
       (storyRepository.getStoryCountByUserId as jest.Mock).mockResolvedValue(1);
 
@@ -165,16 +161,17 @@ describe('storyService tester', () => {
       (storyRepository.getStoriesByUserId as jest.Mock).mockResolvedValue([
         mockStory
       ]);
-      for (let i = 0; i < [mockStory].length; i++) {
-        (likeRepository.getLikesByStoryId as jest.Mock).mockResolvedValue(
-          mockLikes
-        );
-        (commentRepository.getCommentsByStoryId as jest.Mock).mockResolvedValue(
-          mockComments
-        );
-      }
 
-      (storyRepository.getSearchCountByUserId as jest.Mock).mockResolvedValue(1);
+      (likeRepository.getLikesByStoryIds as jest.Mock).mockResolvedValue(
+        mockLikes
+      );
+      (commentRepository.getCommentsByStoryIds as jest.Mock).mockResolvedValue(
+        mockComments
+      );
+
+      (storyRepository.getSearchCountByUserId as jest.Mock).mockResolvedValue(
+        1
+      );
 
       const stories: IStoriesDTO = await storyService.getStories(
         mockStoryQueryParamsSearchAuthor

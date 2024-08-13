@@ -12,6 +12,11 @@ export const getLikesByStoryId = async (StoryId: string): Promise<ILike[]> => {
   return likes;
 };
 
+export const getLikesByStoryIds = async (StoryIds: string[]): Promise<ILike[]> => {
+  const likes: ILike[] = await db<ILike>('likes').select('*').whereIn('StoryId',StoryIds).groupBy('StoryId');
+  return likes;
+};
+
 export const unlikeStory = async (
   unlikeStoryDTO: IUnlikeStoryDTO
 ): Promise<number> => {

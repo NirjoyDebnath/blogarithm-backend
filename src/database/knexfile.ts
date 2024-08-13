@@ -13,7 +13,7 @@ const connectToDatabase: knexDatabaseConnectionObjectType = {
       port: Number(ENV.DatabasePort) || 3306,
       user: ENV.DatabaseUser || 'root',
       password: ENV.DatabasePassword || 'Sample',
-      database: ENV.DatabaseDatabase || 'DBblogarithm'
+      database: ENV.DatabaseDatabase || 'DBblogarithm',
     },
     migrations: {
       tableName: 'knex_migrations'

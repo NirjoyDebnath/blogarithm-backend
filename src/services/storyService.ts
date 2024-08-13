@@ -59,13 +59,16 @@ export const getStories = async (
 
   const storyDTO: StoryDTO[] = [];
 
+  const storyIds = stories.map((story) => story.Id);
+
+  const allStoryLikes: ILike[] =
+    await likeRepository.getLikesByStoryIds(storyIds);
+  const allStoryComments: IComment[] =
+    await commentRepository.getCommentsByStoryIds(storyIds);
+
   for (let i = 0; i < stories.length; i++) {
-    const likes: ILike[] = await likeRepository.getLikesByStoryId(
-      stories[i].Id
-    );
-    const comments: IComment[] = await commentRepository.getCommentsByStoryId(
-      stories[i].Id
-    );
+    const likes: ILike[] = allStoryLikes.filter(like => like.StoryId === stories[i].Id);
+    const comments: IComment[] = allStoryComments.filter(comment => comment.StoryId === stories[i].Id);
     storyDTO.push(new StoryDTO(stories[i], likes, comments, false));
   }
   const storyCount: number = AuthorId

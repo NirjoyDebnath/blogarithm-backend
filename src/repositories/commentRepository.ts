@@ -16,3 +16,13 @@ export const getCommentsByStoryId = async (
     .orderBy('CreatedAt', 'desc');
   return comments;
 };
+
+export const getCommentsByStoryIds = async (
+  StoryIds: string[]
+): Promise<IComment[]> => {
+  const comments: IComment[] = await db<IComment>('comments')
+    .select('*')
+    .whereIn('StoryId', StoryIds)
+    .orderBy('CreatedAt', 'desc');
+  return comments;
+};
