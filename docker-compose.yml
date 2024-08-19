@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysqldatabase
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DatabasePassword}
+      MYSQL_DATABASE: ${DatabaseDatabase}
+    networks:
+      - backend
+    ports:
+      - "3307:3306"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: myapp
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DatabaseHost: db
+      DatabasePort: ${DatabasePort}
+      DatabaseUser: ${DatabaseUser}
+      DatabasePassword: ${DatabasePassword}
+      DatabaseDatabase: ${DatabaseDatabase}
+      Port: ${Port}
+      Environment: ${Environment}
+      SecretKey: ${SecretKey}
+      JwtTokenExpire: ${JwtTokenExpire}
+    networks:
+      - backend
+    ports:
+      - "${Port}:${Port}"
+
+networks:
+  backend:
+    driver: bridge

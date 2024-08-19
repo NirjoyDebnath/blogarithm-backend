@@ -9,7 +9,7 @@ import { handleGlobalError } from './utils/errorHandler';
 import cors from 'cors';
 
 const app = express();
-const port = ENV.Port || 3000;
+const port = ENV.Port;
 app.use(cors());
 app.use(express.json({ limit: '50kb' }));
 app.use('/api/users', userRouter.router);
